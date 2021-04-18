@@ -98,6 +98,13 @@
          <textarea name="described" id="described" placeholder="请输入内容" class="layui-textarea"></textarea>
        </div>
    </div>
+
+	<div class="layui-form-item">
+		<div class="layui-input-block">
+			<button type="button" class="layui-btn" id="test1"><i class="layui-icon"></i>上传文件</button>
+			<button type="button" class="layui-btn" id="test2" style="display: none">开始上传</button>
+		</div>
+	</div>
 	
 	
 	<div class="layui-form-item">
@@ -111,9 +118,10 @@
 </div>
 <script src="../../../lib/layui-v2.5.7/layui/layui.js" charset="utf-8"></script>
 <script>
-    layui.use(['form'], function () {
+    layui.use(['form','upload'], function () {
         var form = layui.form,
             layer = layui.layer,
+				upload = layui.upload,
             $ = layui.$;
 
         //监听提交
@@ -139,6 +147,10 @@
 						        curr: 1
 						    }						   
 						});
+
+						//触发隐藏的上传文件按钮，进行文件上传
+						$('#test2').trigger('click');
+
             		}else if(req.code === 1000){
 						layer.msg(req.msgs,{
 							icon: 5
@@ -158,6 +170,31 @@
             });
             return false;
         });
+
+
+		//指定允许上传的文件类型
+		upload.render({
+			elem: '#test1'
+			,url: 'http://localhost:8080/project-file/uploadFile' //上传接口
+			,accept: 'file' //普通文件
+			,auto: false
+			,data: {
+				projectId: () => $('#id').val(),
+			}
+			,method: 'post'
+			,size: 20480
+			,exts: 'zip|rar|7z|doc|docx|xlsx|pdf' 	//允许上传的文件类型
+			,bindAction: '#test2'
+			,done: function(res,a,b){
+				layer.msg('上传成功');
+				console.log('jjjjj',res);
+			}
+			,error: function(index, upload){
+				layer.msg("上传出现异常，请稍后再试");
+			}
+
+		});
+
 
     });
 </script>

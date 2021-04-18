@@ -154,7 +154,7 @@
             var jsondata = obj.data;
             if (obj.event === 'edit') {
                 var index = layer.open({
-                    title: '编辑用户',
+                    title: '编辑奖项',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
@@ -171,9 +171,7 @@
 						body2.find('#level').val(jsondata.level);
 					}
                 });
-                // $(window).on("resize", function () {
-                //     layer.full(index);
-                // });
+
                 return false;
             } else if (obj.event === 'delete') {
 				layer.confirm('真的删除行么', function(index) {

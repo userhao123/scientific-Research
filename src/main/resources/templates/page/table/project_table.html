@@ -62,7 +62,7 @@
                     <li>中期</li>
                     <li>结题</li>
                 </ul>
-                <div class="layui-tab-content" style="height: 100px;">
+                <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
                         <table class="layui-hide" id="table-all" lay-filter="currentTableFilter"></table>
                     </div>
@@ -89,7 +89,7 @@
         <script type="text/html" id="currentTableBar">
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
-			<a class="layui-btn layui-btn-xs layui-btn-warm data-count-audit" lay-event="audit">审核</a>	
+			<a class="layui-btn layui-btn-xs layui-btn-warm data-count-audit" lay-event="audit">审核</a>
         </script>
 
     </div>
@@ -100,9 +100,11 @@
 <script src="../../lib/layui-v2.5.7/layui/layui.js" charset="utf-8"></script>
 <script>
 	var table;
-    layui.use(['form', 'table', 'element'], function () {
+	var projectId,projectState;
+    layui.use(['form', 'table', 'element','upload'], function () {
         var $ = layui.jquery,
             form = layui.form,
+            upload = layui.upload,
             element = layui.element;
             table = layui.table;
 
@@ -153,11 +155,12 @@
                     {field: 'leaderName', width: 80, title: '负责人'},
                     {field: 'category', width: 150, title: '类别'},
                     {field: 'level', width: 80, title: '级别'},
+                        {field: 'audit', width: 80, title: '审核'},
                     {field: 'createTime', width: 180, title: '创建时间',
                         templet:"<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div> "
                     },
-                    {field: 'finishTime', width: 180, title: '结项时间'},
-                    {title: '操作', minWidth: 200, toolbar: '#currentTableBar', align: "center"}
+                    {field: 'finishTime', width: 50, title: '结项时间'},
+                    {title: '操作', minWidth: 300, toolbar: '#currentTableBar', align: "center"}
                 ]
                 ],
                 limits: [10, 15, 20, 25, 50, 100],
@@ -213,7 +216,7 @@
         table.on('tool(currentTableFilter)', function (obj) {
             var jsondata = obj.data;
             if (obj.event === 'edit') {
-                var index = layer.open({
+                layer.open({
                     title: '编辑项目',
                     type: 2,
                     shade: 0.2,
@@ -229,9 +232,6 @@
 						body2.find('#id').val(jsondata.id);
 					}
                 });
-                // $(window).on("resize", function () {
-                //     layer.full(index);
-                // });
                 return false;
             } else if (obj.event === 'delete') {
 				layer.confirm('真的删除行么', function(index) {

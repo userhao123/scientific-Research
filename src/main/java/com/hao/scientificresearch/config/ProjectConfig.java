@@ -24,6 +24,6 @@ public class ProjectConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LogInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/page/login","/userLogin/login","index.html");
+                .excludePathPatterns("/page/login","/userLogin/login","index.html","/css/login-login.css");
     }
 }

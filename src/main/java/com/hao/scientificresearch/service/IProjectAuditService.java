@@ -1,8 +1,11 @@
 package com.hao.scientificresearch.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hao.scientificresearch.entity.ProjectAudit;
 import com.hao.scientificresearch.model.param.AuditParam;
+import com.hao.scientificresearch.model.resp.ProjectAuditResp;
+import com.hao.scientificresearch.model.resp.ProjectFileResp;
 
 /**
  * <p>
@@ -16,6 +19,7 @@ public interface IProjectAuditService extends IService<ProjectAudit> {
 
     boolean audit(AuditParam param);
 
+    Page<ProjectAuditResp> pageByParam(int page, int limit);
 
 
 }

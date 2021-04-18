@@ -38,6 +38,12 @@
               "href": "page/table/project_file_table.html",
               "icon": "fa fa-tachometer",
               "target": "_self"
+            },
+            {
+              "title": "审核记录",
+              "href": "page/table/project_audit_table.html",
+              "icon": "fa fa-tachometer",
+              "target": "_self"
             }
           ]
         },

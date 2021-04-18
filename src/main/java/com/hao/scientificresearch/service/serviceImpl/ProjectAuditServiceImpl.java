@@ -1,20 +1,31 @@
 package com.hao.scientificresearch.service.serviceImpl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hao.scientificresearch.entity.Project;
 import com.hao.scientificresearch.entity.ProjectAudit;
 import com.hao.scientificresearch.entity.Researcher;
 import com.hao.scientificresearch.exception.ParamException;
 import com.hao.scientificresearch.mapper.ProjectAuditMapper;
+import com.hao.scientificresearch.model.enums.ProjectStateEnum;
 import com.hao.scientificresearch.model.param.AuditParam;
+import com.hao.scientificresearch.model.resp.ProjectAuditResp;
+import com.hao.scientificresearch.model.resp.ProjectResp;
 import com.hao.scientificresearch.service.IProjectAuditService;
 import com.hao.scientificresearch.service.IProjectService;
 import com.hao.scientificresearch.service.IResearcherService;
 import com.hao.scientificresearch.utils.convert.AuditConvert;
+import com.hao.scientificresearch.utils.convert.ProjectAuditConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -42,11 +53,39 @@ public class ProjectAuditServiceImpl extends ServiceImpl<ProjectAuditMapper, Pro
                 throw new ParamException("审核无对应项目");
             }
             project.setState(param.getAuditState()+1);
-//            project.setAudit(ProjectStateEnum.getName(param.getAuditState())+param.getAuditStatus());
+            project.setAudit(ProjectStateEnum.getName(param.getAuditState())+param.getAuditStatus());
 //            project.setRemark(param.getRemark());
             return projectService.saveOrUpdate(project);
         }
         return false;
+    }
+
+    @Override
+    public Page<ProjectAuditResp> pageByParam(int page, int limit) {
+        Page<ProjectAudit> page1 = this.page(new Page<>(page, limit));
+        List<ProjectAudit> records = page1.getRecords();
+
+        //组装返回对象
+        Page<ProjectAuditResp> respPage = new Page<>(page1.getCurrent(), page1.getSize(), page1.getTotal());
+        List<ProjectAuditResp> resps = new ArrayList<>();
+
+        if(CollectionUtil.isNotEmpty(records)){
+            //查询审核人
+            List<Researcher> researcherList = researcherService.list();
+            Map<Integer, Researcher> researcherMap = researcherList.stream().collect(Collectors.toMap(Researcher::getId, r -> r));
+            //查询项目
+            List<Project> projectList = projectService.list();
+            Map<Integer, Project> projectMap = projectList.stream().collect(Collectors.toMap(Project::getId, p -> p));
+            for(ProjectAudit p:records){
+                ProjectAuditResp projectAuditResp = ProjectAuditConvert.change2Resp(p);
+                projectAuditResp.setAuditorName(researcherMap.get(p.getAuditorId()).getName());
+                projectAuditResp.setProjectName(projectMap.get(p.getProjectId()).getName());
+                resps.add(projectAuditResp);
+            }
+            respPage.setRecords(resps);
+
+        }
+        return respPage;
     }
 
     private void checkAuth(AuditParam param){

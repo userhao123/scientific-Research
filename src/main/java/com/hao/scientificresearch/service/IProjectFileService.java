@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.hao.scientificresearch.model.resp.ProjectFileResp;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -20,11 +21,15 @@ public interface IProjectFileService extends IService<ProjectFile> {
 
     boolean add(Integer projectId, Integer projectState, MultipartFile file);
 
+    boolean upload(MultipartFile file,Integer projectId);
+
     Page<ProjectFileResp> pageByParam(int page, int limit, String condition, Integer state);
 
     boolean delete(Integer id);
 
     boolean batchDelete(List<Integer> ids);
+
+    boolean download(Integer id, HttpServletResponse response);
 
 
 }

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>登录页面</title>
     <link rel="icon" href="../images/favicon.ico">
-    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../css/login-login.css">
 	<link rel="stylesheet" href="../lib/layui-v2.5.7/layui/css/layui.css" media="all">
 </head>
 <body>
@@ -133,7 +133,7 @@
                 var params = {};
                 params.username = loginUsername;
                 params.password = loginPassword;
-                var loginLoadIndex = layer.load(2);
+                // var loginLoadIndex = layer.load(2);
                 $('#loginBtn').val("正在登录...");
                 $.ajax({
                     type:'post',
@@ -141,10 +141,8 @@
                     dataType:'json',
                     data:JSON.stringify(params),
                     contentType:'application/json',
-					xhrFields: {withCredentials: true},
-					crossDomain: true,
                     success:function (req) {
-                        layer.close(loginLoadIndex);
+                        // layer.close(loginLoadIndex);
                         // var jsonData = JSON.parse(data);
                         if (req.code === 1){
                             console.log(req);
@@ -160,7 +158,7 @@
                     },
                     error:function () {
                         layer.msg("登录发生异常");
-                        layer.close(loginLoadIndex);
+                        // layer.close(loginLoadIndex);
                         $('#loginBtn').val("登录");
                     }
                 });

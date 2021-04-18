@@ -118,7 +118,7 @@
             table.render({
                 elem: tableIndex,
                 id: 'reloadTable',
-                url: 'http://localhost:8080/project-file/page',
+                url: 'http://localhost:8080/project-audit/page',
                 where: {
                     state : tableStatus
                 },
@@ -133,11 +133,12 @@
                     {type: "checkbox", width: 50},
                     {field: 'id', width: 80, title: 'ID', sort: true},
                     {field: 'projectName', width: 110, title: '项目名'},
-                    {field: 'projectState', width: 110, title: '项目阶段',},
-                    {field: 'fileName', width: 80, title: '文件名'},
-                    {field: 'filePath', width: 150, title: '文件路径'},
-                    {field: 'uploadTime', width: 180, title: '上传时间',
-                        templet:"<div>{{layui.util.toDateString(d.uploadTime, 'yyyy-MM-dd HH:mm:ss')}}</div> "
+                    {field: 'auditState', width: 110, title: '审核阶段'},
+                    {field: 'auditorName', width: 80, title: '审核人'},
+                    {field: 'auditStatus', width: 150, title: '审核状态'},
+                        {field: 'remark', width: 150, title: '备注'},
+                    {field: 'auditTime', width: 180, title: '审核时间',
+                        templet:"<div>{{layui.util.toDateString(d.auditTime, 'yyyy-MM-dd HH:mm:ss')}}</div> "
                     },
                     {title: '操作', minWidth: 200, toolbar: '#currentTableBar', align: "center"}
                 ]
@@ -213,7 +214,22 @@
         table.on('tool(currentTableFilter)', function (obj) {
             var jsondata = obj.data;
             if (obj.event === 'edit') {
-                window.location.href="http://localhost:8080/project-file/download?id="+jsondata.id;
+                layer.open({
+                    title: '下载附件',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '../table/update/project_edit.html',
+					success: function(index, layero) {
+						var body2 = layer.getChildFrame('body', layero);
+						body2.find('#name').val(jsondata.name);
+						body2.find('#leaderName').val(jsondata.leaderName);
+						body2.find('#described').val(jsondata.describe);
+						body2.find('#id').val(jsondata.id);
+					}
+                });
                 return false;
             } else if (obj.event === 'delete') {
 				layer.confirm('真的删除行么', function(index) {

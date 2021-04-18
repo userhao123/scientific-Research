@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,13 +30,28 @@ public class ProjectFileController {
     @Autowired
     private IProjectFileService projectFileService;
 
-    @OperationLogAnno(desc = "上传文件")
+    //项目添加时上传文件
+    @OperationLogAnno(desc = "添加上传文件")
     @PostMapping(value = "/upload" )
     public void upload(@RequestParam MultipartFile file,@RequestParam("projectId") Integer projectId,@RequestParam("projectState") Integer projectState){
         System.out.println("项目id"+projectId+"项目阶段:"+projectState);
         System.out.println("文件名:"+file.getOriginalFilename());
         projectFileService.add(projectId, projectState, file);
 
+    }
+
+    //项目列表中上传文件
+    @OperationLogAnno(desc = "添加上传文件")
+    @PostMapping(value = "/uploadFile")
+    public void upload(@RequestParam MultipartFile file,@RequestParam("projectId") Integer projectId){
+        projectFileService.upload(file,projectId);
+    }
+
+
+    @GetMapping("/download")
+    public void download(@RequestParam("id") Integer id, HttpServletResponse response){
+        boolean b = projectFileService.download(id, response);
+        System.out.println("文件下载成功");
     }
 
     @GetMapping("/page")

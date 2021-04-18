@@ -20,9 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,12 +56,34 @@ public class ProjectFileServiceImpl extends ServiceImpl<ProjectFileMapper, Proje
         String originalFilename = file.getOriginalFilename();
         assert originalFilename != null;
         String fileName = originalFilename.substring(0,originalFilename.indexOf("."));
+        //保存文件
         String filePath = saveFile(file);
         ProjectFile projectFile = new ProjectFile();
         projectFile.setFileName(fileName);
         projectFile.setFilePath(filePath);
         projectFile.setProjectId(projectId);
         projectFile.setProjectState(projectState);
+        projectFile.setUploadTime(LocalDateTime.now());
+        return this.save(projectFile);
+    }
+
+    @Override
+    public boolean upload(MultipartFile file, Integer projectId) {
+        Project project = projectService.getById(projectId);
+        if(ObjectUtil.isEmpty(project)){
+            throw new ParamException("项目不存在");
+        }
+        String originalFilename = file.getOriginalFilename();
+        assert originalFilename != null;
+        String fileName = originalFilename.substring(0,originalFilename.indexOf("."));
+        //保存文件
+        String filePath = saveFile(file);
+        //保存到项目文件表中
+        ProjectFile projectFile = new ProjectFile();
+        projectFile.setFileName(fileName);
+        projectFile.setFilePath(filePath);
+        projectFile.setProjectId(projectId);
+        projectFile.setProjectState(project.getState());
         projectFile.setUploadTime(LocalDateTime.now());
         return this.save(projectFile);
     }
@@ -110,7 +131,7 @@ public class ProjectFileServiceImpl extends ServiceImpl<ProjectFileMapper, Proje
     /**
      * 批量删除
      * @param ids
-     * @return
+     * @return boolean
      */
     @Override
     public boolean batchDelete(List<Integer> ids) {
@@ -118,6 +139,23 @@ public class ProjectFileServiceImpl extends ServiceImpl<ProjectFileMapper, Proje
             throw new ParamException("删除id列表不能为空");
         }
         return this.removeByIds(ids);
+    }
+
+    @Override
+    public boolean download(Integer id, HttpServletResponse response) {
+        ProjectFile projectFile = this.getById(id);
+        if(projectFile == null){
+            throw new ParamException("文件不存在");
+        }
+        try {
+            downloadFile(projectFile.getFilePath(),response);
+//            response.setContentType("text/html;charset=utf-8");
+//            response.setCharacterEncoding("utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            System.out.println("下载文件失败");
+        }
+        return true;
     }
 
 
@@ -139,6 +177,41 @@ public class ProjectFileServiceImpl extends ServiceImpl<ProjectFileMapper, Proje
             throw new ParamException("上传文件失败");
         }
         return outputPath;
+    }
+
+    /**
+     * 根据文件路径下载文件,即写到响应输出流中
+     *
+     * @param path
+     * @param res
+     */
+    public void downloadFile(String path,HttpServletResponse res) throws UnsupportedEncodingException {
+        File file=new File(path);
+        String fileName = file.getName();
+
+        res.setHeader("content-type", "application/octet-stream");
+        res.setContentType("application/octet-stream");
+        res.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes("utf-8"),"iso-8859-1"));
+        byte[] buff = new byte[1024];
+        FileInputStream bis = null;
+        OutputStream os = null;
+        try {
+            os = res.getOutputStream();
+            bis = new FileInputStream(file);
+            int readTmp = 0;
+            while ((readTmp = bis.read(buff)) != -1) {
+                os.write(buff, 0, readTmp);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (bis != null) try {
+                bis.close();
+                os.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

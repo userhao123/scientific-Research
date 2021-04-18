@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>项目添加表单</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../../lib/layui-v2.5.7/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../css/public.css" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style> 
+</head>
+<body>
+<div class="layui-form layuimini-form" >
+    <div class="layui-form-item" hidden="true">
+    	<label class="layui-form-label">id</label>
+    	<div class="layui-input-inline">
+    		<input type="text" name="id" autocomplete="off" id="id" class="layui-input">
+    	</div>
+    </div>
+    <div class="layui-form-item">
+    	<label class="layui-form-label">项目名</label>
+    	<div class="layui-input-block">
+    		<input type="text" name="name" autocomplete="off" lay-verify="required" lay-reqtext="姓名是必填项，不能为空!"
+    				id="name"	placeholder="请输入项目名" class="layui-input">
+    	</div>
+    </div>
+    
+    <div class="layui-form-item">
+    	<label class="layui-form-label">负责人</label>
+    	<div class="layui-input-block">
+    		<input type="text" name="leaderName" autocomplete="off" lay-verify="required" lay-reqtext="负责人是必填项，不能为空!"
+    				id="leaderName"	placeholder="请输入负责人姓名" class="layui-input">
+    	</div>
+    </div>
+    
+    
+    <div class="layui-form-item">
+    	<label class="layui-form-label">项目类别</label>
+    	<div class="layui-input-block">
+    		<select name="category" lay-verify="required" lay-filter="aihao">
+    			<option value=""></option>
+    			<option value="0" selected="">基础研究</option>
+    			<option value="1">应用研究</option>
+    			<option value="2">实验与发展</option>
+    		</select>
+    		<div class="layui-unselect layui-form-select">
+    			<div class="layui-select-title">
+    				<input type="text" placeholder="请选择" value="基础研究" readonly="" id="category"
+    					class="layui-input layui-unselect">
+    					<i class="layui-edge"></i>
+    			</div>
+    			<dl class="layui-anim layui-anim-upbit">
+    				<dd lay-value="" class="layui-select-tips">请选择</dd>
+    				<dd lay-value="0" class="layui-this">基础研究</dd>
+    				<dd lay-value="1" class="">应用研究</dd>
+    				<dd lay-value="2" class="">本科</dd>
+    			</dl>
+    		</div>
+    	</div>
+    </div>
+    
+    
+    <div class="layui-form-item">
+    	<label class="layui-form-label">项目级别</label>
+    	<div class="layui-input-block">
+    		<select name="level" lay-verify="required" lay-filter="aihao">
+    			<option value=""></option>
+    			<option value="0" selected="">校级</option>
+    			<option value="1">市级</option>
+    			<option value="2">省级</option>
+    			<option value="3">国家级</option>
+    		</select>
+    		<div class="layui-unselect layui-form-select">
+    			<div class="layui-select-title">
+    				<input type="text" placeholder="请选择" value="基础研究" readonly="" id="level"
+    					class="layui-input layui-unselect">
+    					<i class="layui-edge"></i>
+    			</div>
+    			<dl class="layui-anim layui-anim-upbit">
+    				<dd lay-value="" class="layui-select-tips">请选择</dd>
+    				<dd lay-value="0" class="layui-this">校级</dd>
+    				<dd lay-value="1" class="">市级</dd>
+    				<dd lay-value="2" class="">省级</dd>
+    				<dd lay-value="2" class="">国家级</dd>
+    			</dl>
+    		</div>
+    	</div>
+    </div>
+    
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">项目描述</label>
+        <div class="layui-input-block">
+          <textarea name="described" id="described" placeholder="请输入内容" class="layui-textarea"></textarea>
+        </div>
+    </div>
+
+	<div class="layui-form-item">
+		<div class="layui-input-block">
+			<button type="button" class="layui-btn" id="test1"><i class="layui-icon"></i>上传文件</button>
+			<button type="button" class="layui-btn" id="test2" style="display: none">开始上传</button>
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+	    <div class="layui-input-block">
+	        <button class="layui-btn layui-btn-normal" id="saveButton" lay-submit lay-filter="saveBtn">确认保存</button>
+	    </div>
+	</div>
+
+	
+</div>
+<script src="../../../lib/layui-v2.5.7/layui/layui.js" charset="utf-8"></script>
+<script>
+	var projectId1;
+	var projectState1;
+    layui.use(['form','upload'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+			upload = layui.upload,
+            $ = layui.$;
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+        	$.ajax({
+            	url: 'http://localhost:8080/project/add',
+            	dataType: "json", //后端返回数据格式为json
+            	async: false,
+            	contentType: "application/json",
+            	data: JSON.stringify(data.field),
+            	type: "POST", //请求方式
+            	success: function(req) { //请求成功时处理，req接收后端返回的json数据
+            		if (req.code === 1) {
+            			// 注意：parent 是 JS 自带的全局对象，可用于操作父页面
+            			// 获取窗口索引
+            			var index = parent.layer.getFrameIndex(window.name);
+            			parent.layer.close(index);
+            			parent.layer.msg(req.msgs);
+            			//刷新表格
+            			parent.table.reload('reloadTable');
+
+            			//接收后端返回的新建项目的id和所处阶段state，传递给文件上传接口的参数
+            			projectId1 = req.projectId;
+            			projectState1 = req.projectState;
+						//触发隐藏的上传文件按钮，进行文件上传
+						$('#test2').trigger('click');
+            		}else if(req.code === 1000){
+            			layer.msg(req.msgs,{
+            				icon: 5
+						});
+            			// window.location.href = '../../login.html';
+            			// window.open('../../login.html');
+            			top.location.href = '../../login.html';
+					}
+            		else {
+            			layer.msg(req.msgs, {
+            				icon: 5
+            			});
+            		}
+            	},
+            	error: function() { //请求出错处理
+            		layer.msg('请求发送异常', {
+            			icon: 5
+            		});
+            	}
+            });
+            return false;
+        });
+
+			//指定允许上传的文件类型
+			upload.render({
+				elem: '#test1'
+				,url: 'http://localhost:8080/project-file/upload' //上传接口
+				,accept: 'file' //普通文件
+				,auto: false
+				,data: {
+						projectId: () => projectId1,
+						projectState: () => projectState1
+				}
+				,method: 'post'
+				,size: 20480
+				,exts: 'zip|rar|7z|doc|docx|xlsx|pdf' 	//允许上传的文件类型
+				,bindAction: '#test2'
+				,done: function(res,a,b){
+					layer.msg('上传成功');
+					console.log('jjjjj',res);
+				}
+				,error: function(index, upload){
+					layer.msg("上传出现异常，请稍后再试");
+				}
+
+			});
+
+
+
+
+    });
+</script>
+</body>
+</html>

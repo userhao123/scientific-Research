@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>审核表单</title>
+		<link rel="stylesheet" href="../../../lib/layui-v2.5.7/layui/css/layui.css" media="all">
+		<link rel="stylesheet" href="../../../css/public.css" media="all">
+	</head>
+	<body>
+		
+		<form class="layui-form" action="" id="addForm">
+			<!-- 隐藏的项目id -->
+			<div class="layui-form-item" hidden="true">
+				<label class="layui-form-label">projectId</label>
+				<div class="layui-input-inline">
+					<input type="text" name="projectId" autocomplete="off" id="projectId" class="layui-input">
+				</div>
+			</div>
+			
+			<!-- 隐藏的审核人id，从session中取值 -->
+			<div class="layui-form-item" hidden="true">
+				<label class="layui-form-label">auditorId</label>
+				<div class="layui-input-inline">
+					<input type="text" name="auditorId" autocomplete="off" id="auditorId" class="layui-input">
+				</div>
+			</div>
+			
+			<!-- 隐藏的审核阶段 -->
+			<div class="layui-form-item" hidden="true">
+				<label class="layui-form-label">auditState</label>
+				<div class="layui-input-inline">
+					<input type="text" name="auditState" autocomplete="off" id="auditState" class="layui-input">
+				</div>
+			</div>
+			
+			<div class="layui-form-item">
+				<label class="layui-form-label">审核</label>
+				<div class="layui-input-inline">
+					<input type="radio" name="auditStatus" value="通过" title="通过" checked="">
+					<div class="layui-unselect layui-form-radio layui-form-radioed">
+						<i class="layui-anim layui-icon"></i>
+						<div>通过</div>
+					</div>
+					<input type="radio" name="auditStatus" value="不通过" title="不通过">
+					<div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i>
+						<div>不通过</div>
+					</div>
+				</div>
+			</div>
+			
+			
+			<div class="layui-form-item layui-form-text">
+			    <label class="layui-form-label">备注</label>
+			    <div class="layui-input-block">
+			      <textarea name="remark" id="remark" placeholder="请输入备注" class="layui-textarea"></textarea>
+			    </div>
+			</div>
+			
+			
+			<div class="layui-form-item">
+				<div class="layui-input-block">
+					<button type="submit" class="layui-btn layui-btn-normal" id="audit" lay-submit="" lay-filter="sub">添加</button>
+					<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+				</div>
+			</div>
+			
+			
+		</form>
+		
+		
+		<!-- 引入jQuery的JavaScript文件 -->
+		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script src="../../../lib/layui-v2.5.7/layui/layui.js" charset="utf-8"></script>
+		
+		
+		<script>
+			layui.use(['form'], function() {
+				var form = layui.form,
+					layer = layui.layer;
+				//监听提交
+				form.on('submit(sub)', function(data) {
+					
+					$.ajax({
+						url: 'http://localhost:8080/project-audit/audit',
+						dataType: "json", //后端返回数据格式为json
+						async: true,
+						contentType: "application/json",   
+						//表单参数值，application/json类型时要使用stringify方法将json转为json字符串，后端才能正确接收到
+						data: JSON.stringify(data.field), 
+						xhrFields: {withCredentials: true},
+						crossDomain: true,
+						type: "POST", //请求方式
+						success: function(req) { //请求成功时处理，req接收后端返回的json数据
+							if (req.code === 1) {
+								//注意：parent 是 JS 自带的全局对象，可用于操作父页面
+								//获取窗口索引
+								var index = parent.layer.getFrameIndex(window.name);
+								parent.layer.close(index);
+								parent.layer.msg(req.msg);
+								//刷新表格
+								parent.table.reload('reloadTable', {
+									url: 'http://localhost:8080/researcher/page'
+								});
+							}else if(req.code === 1000){
+								layer.msg(req.msg,{
+									icon: 5
+								});
+								top.location.href = '../../login.html';
+							} else {
+								layer.msg(req.msg, {
+									icon: 5
+								});
+							}
+						},
+						error: function() { //请求出错处理
+							layer.msg('请求发送异常', {
+								icon: 5
+							});
+						}
+					});
+					return false;
+				});
+				
+	
+			});
+		</script>
+		
+	</body>
+</html>

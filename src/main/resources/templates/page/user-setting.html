@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <title>基本资料</title>
@@ -18,36 +18,118 @@
 
         <div class="layui-form layuimini-form">
             <div class="layui-form-item">
-                <label class="layui-form-label required">管理账号</label>
+                <label class="layui-form-label required">用户名</label>
                 <div class="layui-input-block">
-                    <input type="text" name="username" lay-verify="required" lay-reqtext="管理账号不能为空" placeholder="请输入管理账号"  value="admin" class="layui-input">
-                    <tip>填写自己管理账号的名称。</tip>
+                    <input type="text" name="username" lay-verify="required" lay-reqtext="用户名不能为空" placeholder="请输入用户名"
+                           th:value="${session.loginUser.getUsername()}" value="" class="layui-input">
+                    <tip>填写自己登录账号的名称。</tip>
+                </div>
+            </div>
+
+            <div class="layui-form-item" hidden="true">
+                <label class="layui-form-label">id</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="id" th:value="${session.loginUser.getId()}" autocomplete="off" id="id" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label required">手机</label>
+                <label class="layui-form-label required" >姓名</label>
                 <div class="layui-input-block">
-                    <input type="number" name="phone" lay-verify="required" lay-reqtext="手机不能为空" placeholder="请输入手机"  value="" class="layui-input">
+                    <input type="text" name="name" autocomplete="off" lay-verify="required" lay-reqtext="姓名是必填项，不能为空!"
+                           id="name" th:value="${session.loginUser.getName()}"	placeholder="请输入姓名" class="layui-input">
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label required">电话</label>
+                <div class="layui-input-block">
+                    <input type="te" name="phone" autocomplete="off" lay-verify="required|phone"
+                           id="phone" th:value="${session.loginUser.getPhone()}"	placeholder="请输入电话" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label required">邮箱</label>
+                <div class="layui-input-block">
+                    <input type="text" name="email" lay-verify="email" autocomplete="off"
+                           id="email" th:value="${session.loginUser.getEmail()}"	placeholder="请输入邮箱"		class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label required">职称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" autocomplete="off" lay-verify="required" lay-reqtext="职称是必填项，不能为空!"
+                           id="title"  th:value="${session.loginUser.getTitle()}" placeholder="请输入职称" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">邮箱</label>
+                <label class="layui-form-label">专业方向</label>
                 <div class="layui-input-block">
-                    <input type="email" name="email"  placeholder="请输入邮箱"  value="" class="layui-input">
+                    <input type="text" name="major" lay-verify="required" lay-reqtext="专业是必填项，不能为空!" autocomplete="off"
+                           id="major" th:value="${session.loginUser.getMajor()}"	placeholder="请输入专业" class="layui-input">
                 </div>
             </div>
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">备注信息</label>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">所在学院</label>
                 <div class="layui-input-block">
-                    <textarea name="remark" class="layui-textarea" placeholder="请输入备注信息"></textarea>
+                    <input type="text" name="college" lay-verify="required" lay-reqtext="学院是必填项，不能为空!" autocomplete="off"
+                           id="college" th:value="${session.loginUser.getCollege()}"	placeholder="请输入所在学院" class="layui-input">
                 </div>
             </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">学历</label>
+                <div class="layui-input-block">
+                    <select name="education" lay-verify="required" lay-filter="aihao">
+                        <option value=""></option>
+                        <option value="2">博士</option>
+                        <option value="1">硕士</option>
+                        <option value="0" selected="">本科</option>
+                        <option value="3">专科</option>
+                    </select>
+                    <div class="layui-unselect layui-form-select">
+                        <div class="layui-select-title"><input type="text" placeholder="请选择" value="本科" readonly=""
+                                                               class="layui-input layui-unselect"><i class="layui-edge"></i></div>
+                        <dl class="layui-anim layui-anim-upbit">
+                            <dd lay-value="" class="layui-select-tips">请选择</dd>
+                            <dd lay-value="2" class="">博士</dd>
+                            <dd lay-value="1" class="">硕士</dd>
+                            <dd lay-value="0" class="layui-this">本科</dd>
+                            <dd lay-value="3" class="">专科</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="gender" value="男" title="男" checked="">
+                    <div class="layui-unselect layui-form-radio layui-form-radioed"><i
+                            class="layui-anim layui-icon"></i>
+                        <div>男</div>
+                    </div>
+                    <input type="radio" name="gender" value="女" title="女">
+                    <div class="layui-unselect layui-form-radio"><i class="layui-anim layui-icon"></i>
+                        <div>女</div>
+                    </div>
+                </div>
+            </div>
+
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
                 </div>
             </div>
+
+
+
         </div>
     </div>
 </div>
@@ -57,15 +139,42 @@
     layui.use(['form','miniTab'], function () {
         var form = layui.form,
             layer = layui.layer,
-            miniTab = layui.miniTab;
+            miniTab = layui.miniTab,
+            $ = layui.$;
 
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            var index = layer.alert(JSON.stringify(data.field), {
-                title: '最终的提交信息'
-            }, function () {
-                layer.close(index);
-                miniTab.deleteCurrentByIframe();
+            $.ajax({
+                url: 'http://localhost:8080/researcher/update',
+                dataType: "json", //后端返回数据格式为json
+                async: true,
+                //前端传送json类型请求编码类型，后端controller的参数要用@RequestBody注解接收
+                //默认为application/x-www-form-urlencoded,后端controller不用添加@RequesyBody，
+                //既可以接受自定义的对象参数，又可以接受单个的参数，命名相同会自动封装进行接收。
+                contentType: "application/json",
+                //表单参数值，application/json类型时要使用stringify方法将json转为json字符串，后端才能正确接收到
+                data: JSON.stringify(data.field),
+                type: "POST", //请求方式
+                success: function(req) { //请求成功时处理，req接收后端返回的json数据
+                    if (req.code === 1) {
+                        layer.msg(req.msgs);
+                        miniTab.deleteCurrentByIframe();
+                    }else if(req.code === 1000){
+                        layer.msg(req.msgs,{
+                            icon: 5
+                        });
+                        top.location.href = '../page/login.html';
+                    } else {
+                        layer.msg(req.msgs, {
+                            icon: 5
+                        });
+                    }
+                },
+                error: function() { //请求出错处理
+                    layer.msg('请求发送异常', {
+                        icon: 5
+                    });
+                }
             });
             return false;
         });

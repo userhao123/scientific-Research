@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <title>layuimini-iframe版 v2 - 基于Layui的后台管理系统前端模板</title>
@@ -47,9 +47,9 @@
                     <a href="javascript:;" data-check-screen="full"><i class="fa fa-arrows-alt"></i></a>
                 </li>
                 <li class="layui-nav-item layuimini-setting">
-                    <a href="javascript:;">admin</a>
+                    <a href="javascript:;" th:text="${session.loginUser.getUsername()}">admin</a>
                     <dl class="layui-nav-child">
-                        <dd>
+                        <dd >
                             <a href="javascript:;" layuimini-content-href="page/user-setting.html" data-title="基本资料" data-icon="fa fa-gears">基本资料<span class="layui-badge-dot"></span></a>
                         </dd>
                         <dd>
@@ -81,7 +81,7 @@
 
 
     <!-- 移动导航 -->
-    <div class="layuimini-site-mobile"><i class="layui-icon"></i></div>
+<!--    <div class="layuimini-site-mobile"><i class="layui-icon"></i></div>-->
 
     <div class="layui-body">
 
@@ -147,9 +147,26 @@
         // });
 
         $('.login-out').on("click", function () {
-            layer.msg('退出登录成功', function () {
-                // window.location = 'page/login-3.html';
+            $.ajax({
+                url: 'http://localhost:8080/userLogin/logout',
+                dataType: "json", //后端返回数据格式为json
+                async: true,
+                contentType: "application/json",
+                // data: JSON.stringify(data.field),
+                type: "GET", //请求方式
+                success: function(req) { //请求成功时处理，req接收后端返回的json数据
+                    if (req.code === 1) {
+                        top.location.href = '../page/login.html';
+                    }
+                },
+                error: function() { //请求出错处理
+                    layer.msg('请求发送异常', {
+                        icon: 5
+                    });
+                }
             });
+
+
         });
     });
 </script>

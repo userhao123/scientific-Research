@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hao.scientificresearch.aspect.OperationLogAnno;
 import com.hao.scientificresearch.entity.Researcher;
 import com.hao.scientificresearch.model.param.ResearcherSearchParam;
+import com.hao.scientificresearch.model.param.ResetPwdParam;
 import com.hao.scientificresearch.model.param.ResponseParam;
 import com.hao.scientificresearch.model.resp.ResearchResp;
 import com.hao.scientificresearch.service.IResearcherService;
@@ -13,6 +14,7 @@ import com.hao.scientificresearch.vo.DataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -85,6 +87,16 @@ public class ResearcherController {
             return new ResponseParam(1,"修改成功");
         }
         return new ResponseParam(2,"修改失败");
+    }
+
+    @PostMapping("/resetPwd")
+    public ResponseParam resetPwd(@RequestBody ResetPwdParam param, HttpSession session){
+        boolean b = researcherService.resetPwd(param, session);
+        if(b){
+            System.out.println("修改密码成功");
+            return new ResponseParam(1,"修改密码成功");
+        }
+        return new ResponseParam(2,"修改密码失败");
     }
 
 }

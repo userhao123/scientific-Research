@@ -1,6 +1,8 @@
 package com.hao.scientificresearch.aspect;
 
 
+import cn.hutool.core.util.ObjectUtil;
+import com.hao.scientificresearch.entity.Administrator;
 import com.hao.scientificresearch.entity.LoginLog;
 import com.hao.scientificresearch.entity.Researcher;
 import com.hao.scientificresearch.exception.NoLoginException;
@@ -40,19 +42,30 @@ public class LoginLogAspect {
     public void doAfter(){
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         HttpSession session = request.getSession();
-        Researcher loginUser = (Researcher) session.getAttribute("loginUser");
-        if(loginUser==null) throw new NoLoginException("未登录");
+        Object user = session.getAttribute("loginUser");
+        if(ObjectUtil.isEmpty(user)) throw new NoLoginException("未登录");
         try{
             LoginLog log = new LoginLog();
+            Researcher loginUser = null;
+            Administrator admin = null;
+            if(user instanceof Researcher){
+                 loginUser = (Researcher) user;
+                log.setUserId(loginUser.getId());
+                log.setUserName(loginUser.getUsername());
+            }
+            if(user instanceof Administrator){
+                admin = (Administrator) user;
+                log.setUserId(admin.getId());
+                log.setUserName(admin.getUsername());
+            }
             log.setLoginIp(request.getRemoteAddr());
             log.setLoginTime(LocalDateTime.now());
-            log.setUserId(loginUser.getId());
-            log.setUserName(loginUser.getUsername());
+
             loginLogService.save(log);
-            logger.info("登录用户: {}",loginUser);
+            logger.info("登录用户: {}",loginUser!=null?loginUser:admin);
         }catch (Exception e){
             logger.error("异常信息: {}",e.getMessage());
-            logger.error("登录异常，用户: {}",loginUser);
+//            logger.error("登录异常，用户: {}",loginUser!=null?);
         }
     }
 

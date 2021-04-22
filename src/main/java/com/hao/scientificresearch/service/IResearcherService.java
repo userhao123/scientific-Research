@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.hao.scientificresearch.entity.Researcher;
 import com.hao.scientificresearch.model.param.LoginParam;
 import com.hao.scientificresearch.model.param.ResearcherSearchParam;
+import com.hao.scientificresearch.model.param.ResetPwdParam;
 import com.hao.scientificresearch.model.resp.ResearchResp;
 
 import javax.servlet.http.HttpSession;
@@ -31,4 +32,6 @@ public interface IResearcherService extends IService<Researcher> {
     boolean update(Researcher param);
 
     boolean login(LoginParam param,HttpSession session);
+
+    boolean resetPwd(ResetPwdParam param,HttpSession session);
 }

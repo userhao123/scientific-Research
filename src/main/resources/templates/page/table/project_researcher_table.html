@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.5.7/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">项目名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="projectName" name="projectName" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">成员名</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="researcherName" name="researcherName" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-normal"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+							<button type="reset" class="layui-btn layui-btn-warm"><i class="layui-icon">&#xe640;</i> 清空</button>
+						</div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+<!--        <script type="text/html" id="toolbarDemo">-->
+<!--            <div class="layui-btn-container">-->
+<!--                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>-->
+<!--                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>-->
+<!--            </div>-->
+<!--        </script>-->
+
+        <!-- 项目阶段选项卡 -->
+<!--        <div id="tab">-->
+<!--            <div class="layui-tab layui-tab-brief" lay-filter="tab-all">-->
+<!--                <ul class="layui-tab-title">-->
+<!--                    <li class="layui-this">全部项目</li>-->
+<!--                    <li>新建</li>-->
+<!--                    <li>立项</li>-->
+<!--                    <li>中期</li>-->
+<!--                    <li>结题</li>-->
+<!--                </ul>-->
+<!--                <div class="layui-tab-content">-->
+<!--                    <div class="layui-tab-item layui-show">-->
+<!--                        <table class="layui-hide" id="table-all" lay-filter="currentTableFilter"></table>-->
+<!--                    </div>-->
+<!--                    <div class="layui-tab-item layui-show">-->
+<!--                        <table class="layui-hide" id="table-new" lay-filter="currentTableFilter"></table>-->
+<!--                    </div>-->
+<!--                    <div class="layui-tab-item layui-show">-->
+<!--                        <table class="layui-hide" id="table-confirm" lay-filter="currentTableFilter"></table>-->
+<!--                    </div>-->
+<!--                    <div class="layui-tab-item layui-show">-->
+<!--                        <table class="layui-hide" id="table-middle" lay-filter="currentTableFilter"></table>-->
+<!--                    </div>-->
+<!--                    <div class="layui-tab-item layui-show">-->
+<!--                        <table class="layui-hide" id="table-finish" lay-filter="currentTableFilter"></table>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+
+
+		<table class="layui-hide" id="table-all" lay-filter="currentTableFilter"></table>
+		
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">添加成员</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除成员</a>
+        </script>
+
+    </div>
+</div>
+
+		<!-- 引入jQuery的JavaScript文件 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="../../lib/layui-v2.5.7/layui/layui.js" charset="utf-8"></script>
+<script>
+	var table;
+	var projectId,projectState;
+    layui.use(['form', 'table', 'element','upload'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            upload = layui.upload,
+            element = layui.element;
+            table = layui.table;
+
+        //初始化加载
+        getTable('#table-all');
+
+
+        function getTable(tableIndex){
+            table.render({
+                elem: tableIndex,
+                id: 'reloadTable',
+                url: 'http://localhost:8080/project-researcher/page',
+                toolbar: '#toolbarDemo',
+                defaultToolbar: ['filter', 'exports', 'print', {
+                    title: '提示',
+                    layEvent: 'LAYTABLE_TIPS',
+                    icon: 'layui-icon-tips'
+                }],
+                cols: [
+                    [
+                    {type: "checkbox", width: 50},
+                    {field: 'projectName', width: 200, title: '项目名'},
+                    {field: 'researcherName', width: 200, title: '项目成员'},
+                    {title: '操作', minWidth: 300, toolbar: '#currentTableBar', align: "center"}
+                ]
+                ],
+                limits: [10, 15, 20, 25, 50, 100],
+                limit: 15,
+                page: true,
+                skin: 'line'
+            });
+
+        }
+
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            var result = JSON.stringify(data.field);
+			table.reload('reloadTable', {
+			    page: {
+			        curr: 1
+			    }
+			    , where: {
+					condition: result
+				}
+			},'data');
+			
+            return false;
+        });
+
+
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var jsondata = obj.data;
+            if (obj.event === 'edit') {
+                layer.open({
+                    title: '添加项目成员',
+                    type: 2,
+                    shade: 0.2,
+                    maxmin:true,
+                    shadeClose: true,
+                    area: ['100%', '100%'],
+                    content: '../table/update/project_researcher_add.html',
+					success: function(index, layero) {
+                        var body2 = layer.getChildFrame('body', layero);
+                        body2.find('#projectName').val(jsondata.projectName);
+                        // body2.find('#researcherName').val(jsondata.researcherName);
+                        body2.find('#projectId').val(jsondata.projectId);
+					}
+                });
+                return false;
+            } else if (obj.event === 'delete') {
+				layer.confirm('确定要删除成员', function(index) {
+                    layer.close(index);
+                    layer.open({
+                        title: '删除项目成员',
+                        type: 2,
+                        shade: 0.2,
+                        maxmin:true,
+                        shadeClose: true,
+                        area: ['100%', '100%'],
+                        content: '../table/update/project_researcher_delete.html',
+                        success: function(index, layero) {
+                            var body2 = layer.getChildFrame('body', layero);
+                            body2.find('#projectName').val(jsondata.projectName);
+                            // body2.find('#researcherName').val(jsondata.researcherName);
+                            body2.find('#projectId').val(jsondata.projectId);
+                        }
+                    });
+				});
+            }
+        });
+
+
+	
+    });
+	
+</script>
+
+</body>
+</html>

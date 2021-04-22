@@ -106,9 +106,6 @@
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             var result = JSON.stringify(data.field);
-            // layer.alert(result, {
-            //     title: '最终的搜索信息'
-            // });
 			table.reload('reloadTable', {
 			    page: {
 			        curr: 1
@@ -153,7 +150,7 @@
         table.on('tool(currentTableFilter)', function (obj) {
             var jsondata = obj.data;
             if (obj.event === 'edit') {
-                var index = layer.open({
+                layer.open({
                     title: '编辑奖项',
                     type: 2,
                     shade: 0.2,
@@ -185,7 +182,7 @@
 									icon: 5
 								});
 							}
-						})
+						});
 					layer.close(index);
 				});
 				

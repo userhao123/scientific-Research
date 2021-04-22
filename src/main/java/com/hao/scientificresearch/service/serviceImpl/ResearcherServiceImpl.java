@@ -6,15 +6,19 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hao.scientificresearch.entity.Administrator;
 import com.hao.scientificresearch.entity.Researcher;
 import com.hao.scientificresearch.exception.ParamException;
 import com.hao.scientificresearch.mapper.ResearcherMapper;
 import com.hao.scientificresearch.model.enums.EducationEnum;
 import com.hao.scientificresearch.model.param.LoginParam;
 import com.hao.scientificresearch.model.param.ResearcherSearchParam;
+import com.hao.scientificresearch.model.param.ResetPwdParam;
 import com.hao.scientificresearch.model.resp.ResearchResp;
+import com.hao.scientificresearch.service.IAdministratorService;
 import com.hao.scientificresearch.service.IResearcherService;
 import com.hao.scientificresearch.utils.convert.ResearcherConvert;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -30,6 +34,9 @@ import java.util.List;
  */
 @Service
 public class ResearcherServiceImpl extends ServiceImpl<ResearcherMapper, Researcher> implements IResearcherService {
+
+    @Autowired
+    private IAdministratorService administratorService;
 
     @Override
     public List<ResearchResp> getList() {
@@ -105,7 +112,20 @@ public class ResearcherServiceImpl extends ServiceImpl<ResearcherMapper, Researc
                                                         .or().eq(Researcher::getEmail, param.getUsername());
         Researcher researcher = this.getOne(wrapper);
         if(researcher == null){
-            throw new ParamException("该用户不存在");
+            LambdaQueryWrapper<Administrator> wrapper1 = Wrappers.lambdaQuery(Administrator.class).eq(Administrator::getUsername, param.getUsername())
+                    .or().eq(Administrator::getPhone, param.getUsername())
+                    .or().eq(Administrator::getEmail, param.getUsername());
+            Administrator administrator = administratorService.getOne(wrapper1);
+            if(administrator == null){
+                throw new ParamException("用户不存在");
+            }else{
+                if(!administrator.getPassword().equals(param.getPassword())){
+                    throw new ParamException("密码不正确");
+                }
+                session.setAttribute("loginUser",administrator);
+                return true;
+            }
+
         }
         if(!researcher.getPassword().equals(param.getPassword())){
             throw new ParamException("密码不正确");
@@ -113,5 +133,28 @@ public class ResearcherServiceImpl extends ServiceImpl<ResearcherMapper, Researc
         session.setAttribute("loginUser",researcher);
         return true;
 
+    }
+
+    @Override
+    public boolean resetPwd(ResetPwdParam param, HttpSession session) {
+        Object loginUser = session.getAttribute("loginUser");
+        if(ObjectUtil.isEmpty(loginUser)){
+            throw new ParamException("未登录，请先登录");
+        }
+        if(param==null){
+            throw new ParamException("参数不能为空");
+        }
+        if(loginUser instanceof Researcher){
+            if(!param.getAgainPassword().equals(param.getNewPassword())){
+                throw new ParamException("两次输入的密码不相同");
+            }
+            Researcher researcher = this.getById(((Researcher) loginUser).getId());
+            if(!param.getOldPassword().equals(researcher.getPassword())){
+                throw new ParamException("原密码错误");
+            }
+            researcher.setPassword(param.getNewPassword());
+            return this.updateById(researcher);
+        }
+        return true;
     }
 }

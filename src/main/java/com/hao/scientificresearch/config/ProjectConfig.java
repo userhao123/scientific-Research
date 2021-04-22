@@ -23,7 +23,9 @@ public class ProjectConfig implements WebMvcConfigurer {
     //配置登录拦截器
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        //"/asserts/**","/webjars/**"排除css,js等静态资源
         registry.addInterceptor(new LogInterceptor()).addPathPatterns("/**")
-                .excludePathPatterns("/page/login","/userLogin/login","index.html","/css/login-login.css");
+                .excludePathPatterns("/page/login","/userLogin/login","index.html",
+                        "/css/**","/images/**","/js/**","/layui-v2.5.7.layui/**","/lib/**");
     }
 }

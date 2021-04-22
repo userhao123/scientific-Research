@@ -147,9 +147,7 @@
             	//既可以接受自定义的对象参数，又可以接受单个的参数，命名相同会自动封装进行接收。
             	contentType: "application/json",   
             	//表单参数值，application/json类型时要使用stringify方法将json转为json字符串，后端才能正确接收到
-            	data: JSON.stringify(data.field), 
-				xhrFields: {withCredentials: true},
-				crossDomain: true,
+            	data: JSON.stringify(data.field),
             	type: "POST", //请求方式
             	success: function(req) { //请求成功时处理，req接收后端返回的json数据
             		if (req.code === 1) {
@@ -168,7 +166,7 @@
 						layer.msg(req.msg,{
 							icon: 5
 						});
-						top.location.href = '../../login.html';
+						top.location.href = '../page/login.html';
 					} else {
             			layer.msg(req.msg, {
             				icon: 5

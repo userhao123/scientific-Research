@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hao.scientificresearch.entity.Project;
+import com.hao.scientificresearch.entity.ProjectResearcher;
 import com.hao.scientificresearch.entity.Researcher;
 import com.hao.scientificresearch.exception.ParamException;
 import com.hao.scientificresearch.mapper.ProjectMapper;
@@ -16,6 +17,7 @@ import com.hao.scientificresearch.model.param.ProjectParam;
 import com.hao.scientificresearch.model.param.ProjectSearchParam;
 import com.hao.scientificresearch.model.resp.AddProjectFileResp;
 import com.hao.scientificresearch.model.resp.ProjectResp;
+import com.hao.scientificresearch.service.IProjectResearcherService;
 import com.hao.scientificresearch.service.IProjectService;
 import com.hao.scientificresearch.service.IResearcherService;
 import com.hao.scientificresearch.utils.convert.ProjectConvert;
@@ -40,6 +42,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     @Autowired
     private IResearcherService researcherService;
+    @Autowired
+    private IProjectResearcherService projectResearcherService;
 
 
     @Override
@@ -83,12 +87,22 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         if (CollectionUtil.isEmpty(researcherList)) {
             throw new ParamException("该负责人未注册");
         }
+        int count = this.count(Wrappers.lambdaQuery(Project.class).eq(Project::getName, param.getName()));
+        if(count > 0){
+            throw new ParamException("项目名已存在");
+        }
 
         Project project = ProjectConvert.change2project(param);
         project.setLeaderId(researcherList.get(0).getId());
         project.setState(0);
         boolean b = this.save(project);
         if(b){
+            //保存项目成员
+            ProjectResearcher projectResearcher = new ProjectResearcher();
+            projectResearcher.setProjectId(project.getId());
+            projectResearcher.setResearcherId(project.getLeaderId());
+            projectResearcherService.save(projectResearcher);
+
             return new AddProjectFileResp(1,"添加项目成功",project.getId(),project.getState());
         }
         return new AddProjectFileResp(2,"添加项目失败",null,null);
@@ -102,7 +116,14 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         if (this.getById(id) == null) {
             throw new ParamException("删除项不存在");
         }
-        return this.removeById(id);
+        boolean b = this.removeById(id);
+        if(b){
+            //将项目成员表对应项目的成员也删除
+            return projectResearcherService.remove(Wrappers.lambdaQuery(ProjectResearcher.class).eq(ProjectResearcher::getProjectId, id));
+        }else {
+            return false;
+        }
+
     }
 
     @Override

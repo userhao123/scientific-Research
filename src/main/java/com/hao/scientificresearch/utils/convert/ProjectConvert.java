@@ -22,7 +22,7 @@ public class ProjectConvert {
             projectResp.setAudit(entity.getAudit());
             projectResp.setCategory(ProjectCategoryEnum.getName(entity.getCategory()));
             projectResp.setCreateTime(entity.getCreateTime());
-            projectResp.setDescribe(entity.getDescribed());
+            projectResp.setDescribed(entity.getDescribed());
             projectResp.setFinishTime(entity.getFinishTime());
             projectResp.setId(entity.getId());
             projectResp.setLeaderId(entity.getLeaderId());

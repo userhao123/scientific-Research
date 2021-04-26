@@ -37,7 +37,7 @@ public class AuditParam {
     /**
      * 审核阶段#0新建1立项2中期检查3结题4延期
      */
-    private Integer auditState;
+    private String  auditState;
 
     /**
      * 审核状态

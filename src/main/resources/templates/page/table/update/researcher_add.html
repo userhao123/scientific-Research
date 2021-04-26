@@ -118,11 +118,22 @@
 			</div>
 		</div>
 	</div>
-	
+
+
+	<div class="layui-form-item">
+		<div class="layui-input-block">
+			<label class="layui-form-label">上传图片</label>
+			<button type="button" class="layui-btn" id="test1"><i class="layui-icon"></i>图片上传</button>
+			<br>
+			<tip>只能上传.png,.jpeg格式的文件，大小不能超过20MB。</tip>
+			<button type="button" class="layui-btn" id="test2" style="display: none">开始上传</button>
+		</div>
+	</div>
+
 	
 	<div class="layui-form-item">
 	    <div class="layui-input-block">
-	        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+	        <button class="layui-btn layui-btn-normal" id="saveBtn" lay-submit lay-filter="saveBtn">确认保存</button>
 	    </div>
 	</div>
 	
@@ -131,9 +142,10 @@
 </div>
 <script src="../../../lib/layui-v2.5.7/layui/layui.js" charset="utf-8"></script>
 <script>
-    layui.use(['form'], function () {
+    layui.use(['form','upload'], function () {
         var form = layui.form,
             layer = layui.layer,
+				upload = layui.upload,
             $ = layui.$;
 
         //监听提交
@@ -182,6 +194,32 @@
             
             return false;
         });
+
+
+		//指定允许上传的文件类型
+		upload.render({
+			elem: '#test1'
+			,url: 'http://localhost:8080/project-file/upload' //上传接口
+			,accept: 'file' //普通文件
+			,auto: false
+			,data: {
+				projectId: () => projectId1,
+				projectState: () => projectState1
+			}
+			,method: 'post'
+			,size: 20480
+			,exts: 'png|jpeg|' 	//允许上传的文件类型
+			,bindAction: '#test2'
+			,done: function(res,a,b){
+				layer.msg('上传成功');
+				console.log('jjjjj',res);
+			}
+			,error: function(index, upload){
+				layer.msg("上传出现异常，请稍后再试");
+			}
+
+		});
+
 
     });
 </script>

@@ -13,6 +13,7 @@ import com.hao.scientificresearch.service.IResearcherService;
 import com.hao.scientificresearch.vo.DataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -98,6 +99,19 @@ public class ResearcherController {
         }
         return new ResponseParam(2,"修改密码失败");
     }
+
+
+    //头像图片上传
+    @PostMapping("/photoUpload")
+    public ResponseParam photoUpload(HttpSession session,MultipartFile file){
+        System.out.println("图片名:"+file.getOriginalFilename());
+        boolean b = researcherService.savePhoto(session, file);
+        if(b){
+            return new ResponseParam(1,"上传成功");
+        }
+        return new ResponseParam(2,"上传成功");
+    }
+
 
 }
 

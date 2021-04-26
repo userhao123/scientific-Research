@@ -19,6 +19,21 @@ spring:
     multipart:
       max-file-size: 20MB
       max-request-size: 200MB
+  #spring的邮件服务的配置
+  mail:
+    #邮箱的SMTP服务器地址
+    host: smtp.qq.com
+    #qq邮箱登录账号
+    username: 3084921312@qq.com
+    #授权码
+    password: tknvooavggjudcgd
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
 
 mybatis-plus:
   global-config:

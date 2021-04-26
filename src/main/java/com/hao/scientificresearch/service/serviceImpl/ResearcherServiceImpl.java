@@ -19,10 +19,12 @@ import com.hao.scientificresearch.model.resp.CollectInformationResp;
 import com.hao.scientificresearch.model.resp.ResearchResp;
 import com.hao.scientificresearch.service.IAdministratorService;
 import com.hao.scientificresearch.service.ICollectInformationService;
+import com.hao.scientificresearch.service.IProjectFileService;
 import com.hao.scientificresearch.service.IResearcherService;
 import com.hao.scientificresearch.utils.convert.ResearcherConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -171,5 +173,25 @@ public class ResearcherServiceImpl extends ServiceImpl<ResearcherMapper, Researc
             return this.updateById(researcher);
         }
         return true;
+    }
+
+    @Override
+    public boolean savePhoto(HttpSession session, MultipartFile file) {
+        if(ObjectUtil.isEmpty(file)){
+            throw new ParamException("图片文件不能为空");
+        }
+        Object loginUser = session.getAttribute("loginUser");
+        Researcher researcher = null;
+        if(loginUser instanceof Researcher){
+            Integer id = ((Researcher) loginUser).getId();
+            researcher = this.getById(id);
+        }
+        if(researcher == null){
+            throw new ParamException("用户未注册");
+        }
+        //调用方法保存文件
+        String saveFile = new ProjectFileServiceImpl().saveFile(file);
+        researcher.setPhoto(saveFile);
+        return this.updateById(researcher);
     }
 }

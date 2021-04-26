@@ -123,6 +123,19 @@
 
 
             <div class="layui-form-item">
+                <label class="layui-form-label">上传图片</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="test1"><i class="layui-icon"></i>图片上传</button>
+                    <button type="button" class="layui-btn" id="photo"><i class="layui-icon"></i>拍照上传</button><br>
+                    <br>
+                    <tip>只能上传.png,.jpeg,.jpg格式的文件，大小不能超过20MB。</tip>
+                    <button type="button" class="layui-btn" id="test2" style="display: none">开始上传</button>
+                </div>
+            </div>
+
+
+
+            <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
                 </div>
@@ -136,10 +149,11 @@
 <script src="../lib/layui-v2.5.5/layui.js" charset="utf-8"></script>
 <script src="../js/lay-config.js?v=1.0.4" charset="utf-8"></script>
 <script>
-    layui.use(['form','miniTab'], function () {
+    layui.use(['form','miniTab','upload'], function () {
         var form = layui.form,
             layer = layui.layer,
             miniTab = layui.miniTab,
+            upload = layui.upload,
             $ = layui.$;
 
         //监听提交
@@ -148,17 +162,17 @@
                 url: 'http://localhost:8080/researcher/update',
                 dataType: "json", //后端返回数据格式为json
                 async: true,
-                //前端传送json类型请求编码类型，后端controller的参数要用@RequestBody注解接收
-                //默认为application/x-www-form-urlencoded,后端controller不用添加@RequesyBody，
-                //既可以接受自定义的对象参数，又可以接受单个的参数，命名相同会自动封装进行接收。
                 contentType: "application/json",
                 //表单参数值，application/json类型时要使用stringify方法将json转为json字符串，后端才能正确接收到
                 data: JSON.stringify(data.field),
                 type: "POST", //请求方式
                 success: function(req) { //请求成功时处理，req接收后端返回的json数据
                     if (req.code === 1) {
-                        layer.msg(req.msgs);
-                        miniTab.deleteCurrentByIframe();
+                        console.log("基本资料上传图片");
+                        parent.layer.msg(req.msgs);
+                        // miniTab.deleteCurrentByIframe();
+                        //触发隐藏的上传文件按钮，进行文件上传
+                        $('#test2').trigger('click');
                     }else if(req.code === 1000){
                         layer.msg(req.msgs,{
                             icon: 5
@@ -178,6 +192,49 @@
             });
             return false;
         });
+
+
+        //指定允许上传的文件类型
+        upload.render({
+            elem: '#test1'
+            ,url: 'http://localhost:8080/researcher/photoUpload' //上传接口
+            ,accept: 'file' //普通文件
+            ,auto: false
+            // ,data: {
+            //     projectId: () => projectId1,
+            //     projectState: () => projectState1
+            // }
+            ,method: 'post'
+            ,size: 20480
+            ,exts: 'png|jpeg|jpg|' 	//允许上传的文件类型
+            ,bindAction: '#test2'
+            ,choose: function () {
+                console.log("选择图片回调");
+                $('#photo').addClass('layui-btn-disabled');
+            }
+            ,done: function(res,a,b){
+                // layer.msg('上传成功');
+                console.log('jjjjj',res);
+            }
+            ,error: function(index, upload){
+                layer.msg("上传出现异常，请稍后再试");
+            }
+        });
+
+
+        $('#photo').on("click",function () {
+            layer.open({
+                title: '拍照',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+                shadeClose: true,
+                area: ['100%', '100%'],
+                content: '../page/more/photo.html',
+            });
+        });
+
+
 
     });
 </script>

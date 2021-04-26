@@ -7,6 +7,8 @@ import com.hao.scientificresearch.model.param.AuditParam;
 import com.hao.scientificresearch.model.resp.ProjectAuditResp;
 import com.hao.scientificresearch.model.resp.ProjectFileResp;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * <p>
  * 项目审核表 服务类
@@ -17,7 +19,7 @@ import com.hao.scientificresearch.model.resp.ProjectFileResp;
  */
 public interface IProjectAuditService extends IService<ProjectAudit> {
 
-    boolean audit(AuditParam param);
+    boolean audit(AuditParam param, HttpSession session);
 
     Page<ProjectAuditResp> pageByParam(int page, int limit);
 

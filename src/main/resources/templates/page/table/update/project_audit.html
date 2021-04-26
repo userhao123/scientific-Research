@@ -86,9 +86,7 @@
 						async: true,
 						contentType: "application/json",   
 						//表单参数值，application/json类型时要使用stringify方法将json转为json字符串，后端才能正确接收到
-						data: JSON.stringify(data.field), 
-						xhrFields: {withCredentials: true},
-						crossDomain: true,
+						data: JSON.stringify(data.field),
 						type: "POST", //请求方式
 						success: function(req) { //请求成功时处理，req接收后端返回的json数据
 							if (req.code === 1) {
@@ -96,18 +94,18 @@
 								//获取窗口索引
 								var index = parent.layer.getFrameIndex(window.name);
 								parent.layer.close(index);
-								parent.layer.msg(req.msg);
+								parent.layer.msg(req.msgs);
 								//刷新表格
 								parent.table.reload('reloadTable', {
-									url: 'http://localhost:8080/researcher/page'
+									url: 'http://localhost:8080/project/page'
 								});
 							}else if(req.code === 1000){
-								layer.msg(req.msg,{
+								layer.msg(req.msgs,{
 									icon: 5
 								});
 								top.location.href = '../../login.html';
 							} else {
-								layer.msg(req.msg, {
+								layer.msg(req.msgs, {
 									icon: 5
 								});
 							}

@@ -7,6 +7,7 @@ import com.hao.scientificresearch.model.param.LoginParam;
 import com.hao.scientificresearch.model.param.ResearcherSearchParam;
 import com.hao.scientificresearch.model.param.ResetPwdParam;
 import com.hao.scientificresearch.model.resp.ResearchResp;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -34,4 +35,6 @@ public interface IResearcherService extends IService<Researcher> {
     boolean login(LoginParam param,HttpSession session);
 
     boolean resetPwd(ResetPwdParam param,HttpSession session);
+    //保存上传的图片
+    boolean savePhoto(HttpSession session, MultipartFile file);
 }

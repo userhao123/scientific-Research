@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>拍照上传图片</title>
+    <link rel="stylesheet" href="../../../lib/layui-v2.5.7/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../css/public.css" media="all">
+</head>
+<body>
+
+<div class="layui-fluid layui-anim" id="camera" lay-title="拍照上传图片">
+    <div class="layui-row">
+        <div class="layui-card" style="background-color:#f0f0f0;margin: auto auto;">
+            <div class="layui-card-body" style="padding: 0px;">
+                <div class="layui-row camera-show-pc">
+                    <div class="bag_display_flex" style="justify-content: center;display: flex">
+                        <div style="position: relative;">
+                            <video id="v" style="background-color: #000000"></video>
+                            <div class="camera-control">
+                                <button type="button"  id="stop" class="layui-icon layui-icon-stop  layui-btn-normal">关闭摄像头</button>
+                                <button type="button" id="start" class="layui-icon layui-icon-triangle-r  layui-btn-normal">开启摄像头</button>
+                                <button type="button" id="snap" class="layui-icon layui-icon-camera-fill  layui-btn-normal">拍照</button>
+                                <button type="button" id="clear" class="layui-icon layui-btn-normal layui-icon-fonts-clear camera-btn ">清空图片</button>
+                                <button type="button" id="save" class="layui-icon layui-btn-normal layui-icon-save camera-btn ">上传</button>
+                            </div>
+                        </div>
+                        <div class="layui-row" style="position: relative">
+                            <div class="camera-canvas-group"></div>
+                        </div>
+                        <div>
+                            <canvas id="canvas" hidden style="margin-left: 2px;background-color: #000000"></canvas>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+<!--    <div class="layui-form-item" style="text-align: center;">-->
+<!--        <button id="closeBtn" type="button" class="layui-btn layui-btn-primary" function="close">关闭</button>-->
+<!--    </div>-->
+</div>
+
+<script type="text/javascript" src="../../../lib/layui-v2.5.7/layui/camvas.js"></script>
+<script src="../../../lib/layui-v2.5.7/layui/layui.js" charset="utf-8"></script>
+<script data-th-inline="javascript" type="text/javascript">
+
+    layui.use(['jquery','layer'], function () {
+        var $ = layui.jquery,
+            $view = $('#camera'),
+            config={},
+            myCamvas;
+        var layer = layui.layer;
+        init();
+        onClick();
+
+
+        function init() {
+            let scale = 120;//宽高比例倍数
+            config = {
+                video:{width:Number(scale*4),height:Number(scale*3)},//4:3
+                canvasId:'canvas',
+                videoId:'v',
+                imgType:'png',
+                quality:'1' //图片质量0-1之间
+            };
+            $('.camera-show-pc').css('width',config.video.width*2+20);
+            $view.find('#canvas').attr('width',config.video.width);
+            $view.find('#canvas').attr('height',config.video.height);
+            //拍照实例化
+            myCamvas = new camvas(config);
+            myCamvas.startCamera();
+            $view.find('#start').hide();
+        }
+        function onClick() {
+            //停止拍照
+            $view.find('#stop').click(function () {
+                myCamvas.stop();
+                $view.find('#stop').hide();
+                $view.find('#start').show();
+                $view.find('#snap').show()
+            });
+            //启动摄像头
+            $view.find('#start').click(function () {
+                myCamvas.startCamera();
+                $view.find('#stop').show();
+                $view.find('#start').hide()
+            });
+            //拍照
+            $view.find('#snap').click(function () {
+                myCamvas.drawImage(function drawImage(base64URL) {
+                    let xsCamera = $('<div></div>').addClass('camera-canvas-item');
+                    //这个可以实现连续拍照,同时回显图片
+                    $('.camera-canvas-group').empty();
+                    xsCamera.append($('<img>').attr('src',base64URL)).append($('<span></span>').addClass('layui-icon layui-icon-close-circle-fill canvas-item-del'));
+                    $('.camera-canvas-group').prepend(xsCamera);
+                });
+                /*$view.find('#snap').hide();*/
+            });
+            //清空
+            $view.find('#clear').click(function () {
+                clearCanvas();
+                $view.find('.camera-canvas-group').empty()
+            });
+
+            //append方式添加节点直接click无效,点击显示大图
+            $view.find('.camera-canvas-group').on('click','.camera-canvas-item img',function () {
+                myCamvas.ctx.drawImage(this,0,0,config.video.width,config.video.height)
+            });
+            //删除图片
+            $view.find('.camera-canvas-group').on('click','.camera-canvas-item .canvas-item-del',function () {
+                //删除父节点元素
+                $(this).closest('.camera-canvas-item').remove()
+            });
+            //保存所有图片到本地
+            $view.find('#save').click(function () {
+                let fileName = getFileName();
+                console.log("文件名"+fileName);
+                let el_a = $('<a>');
+                layui.each($view.find('.camera-canvas-group .camera-canvas-item'),function (k,item) {
+                    let t_filename = fileName+'_'+k+'.'+config.imgType;
+                    // 解析,把照片上传到服务器。并回显到父级窗口
+                    downLoad($(this).find('img').attr('src'),t_filename,config.imgType);
+
+                })
+            });
+            //空格按下拍照
+            $(document).keypress(function (e) {
+                e.keyCode===32&&$('#snap').trigger('click');
+            })
+        };
+        //tode
+        function getFileName() {
+            let date = new Date();
+            let fileName = ''+date.getFullYear()+(date.getMonth()<9?+'0':'')
+                +(date.getMonth()+1) +(date.getDate()<10?+'0':'')+date.getDate()
+                +date.getHours() +date.getMinutes()+(date.getSeconds()<10?'0':'')+date.getSeconds();
+            return fileName;
+        }
+        // 文件上传到服务器
+        function downLoad(dataURL,fileName,fileType) {
+            var reader = new FileReader();
+            reader.readAsDataURL(createFile(dataURL));
+            reader.onload = function (e) {
+                // 转换成base64 进行父窗口的回显
+                // /*console.log(window.parent.frames.length);*/
+                // parent.frames[window.parent.frames.length - 2].document.getElementById("shotPhoto").innerHTML = fileName;
+                // parent.frames[window.parent.frames.length - 2].document.getElementById("preShow").setAttribute("src", reader.result);
+                //进行文件上传到ftp服务器 ，将blob对象转换成file
+                let file = dataURLtoFile(dataURL, fileName);
+                var formData = new FormData();
+                formData.append("file", file);
+                $.ajax({
+                    type: 'post',
+                    url: 'http://localhost:8080/researcher/photoUpload',
+                    data: formData,
+                    dataType: "json",
+                    processData: false,
+                    contentType: false,
+                    success: function (res) {
+                        //上传失败
+                        if (res.code > 1) {
+                            layer.msg('上传失败', {icon: 2, time: 1000});
+                        }
+                        // 上传成功
+                        if (res.code == 1) {
+                            // var objFile = JSON.parse(res.data);
+                            // window.parent.frames[window.parent.frames.length - 2].document.getElementById("img_url").setAttribute("value", objFile['filePath']);
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            parent.layer.msg('上传成功', {icon: 1, time: 1000});
+                            // setTimeout(function () {
+                            //     $("#closeBtn").click();
+                            // }, 1000)
+
+                        }
+                    }
+                });
+            }
+        }
+                // 解析 BASE64文件内容 for IE，Edge
+                function createFile(urlData) {
+                    var arr = urlData.split(','),
+                        mime = arr[0].match(/:(.*?);/)[1],
+                        bstr = window.atob(arr[1]),
+                        n = bstr.length,
+                        u8arr = new Uint8Array(n);
+                    while (n--) {
+                        u8arr[n] = bstr.charCodeAt(n);
+                    }
+                    return new Blob([u8arr], {type: mime});
+                }
+
+                // base64 to file
+                function dataURLtoFile(dataurl, filename) {//将base64转换为文件
+                    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+                    while (n--) {
+                        u8arr[n] = bstr.charCodeAt(n);
+                    }
+                    return new File([u8arr], filename, {type: mime});
+                }
+
+                function clearCanvas() {
+                    var c = document.getElementById("canvas");
+                    var cxt = c.getContext("2d");
+                    cxt.clearRect(0, 0, c.width, c.height);
+                }
+            });
+
+
+</script>
+
+
+
+</body>
+</html>

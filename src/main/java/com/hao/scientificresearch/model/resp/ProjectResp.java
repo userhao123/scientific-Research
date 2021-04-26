@@ -64,7 +64,7 @@ public class ProjectResp {
     /**
      * 项目描述
      */
-    private String describe;
+    private String described;
 
     /**
      * 审核状态

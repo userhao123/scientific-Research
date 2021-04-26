@@ -152,7 +152,7 @@
                     {field: 'id', width: 80, title: 'ID', sort: true},
                     {field: 'number', width: 100, title: '编号'},
                     {field: 'name', width: 110, title: '项目名'},
-                    {field: 'describe', width: 100, title: '描述'},
+                    {field: 'described', width: 100, title: '描述'},
                     {field: 'state', title: '阶段', width: 110},
                     {field: 'leaderName', width: 80, title: '负责人'},
                     {field: 'category', width: 150, title: '类别'},
@@ -230,7 +230,7 @@
 						var body2 = layer.getChildFrame('body', layero);
 						body2.find('#name').val(jsondata.name);
 						body2.find('#leaderName').val(jsondata.leaderName);
-						body2.find('#described').val(jsondata.describe);
+						body2.find('#described').val(jsondata.described);
 						body2.find('#id').val(jsondata.id);
 					}
                 });
@@ -260,6 +260,11 @@
 				    shadeClose: true,
 				    area: ['60%', '60%'],
 				    content: '../table/update/project_audit.html',
+                    success: function(index, layero) {
+                        var body2 = layer.getChildFrame('body', layero);
+                        body2.find('#projectId').val(jsondata.id);
+                        body2.find("#auditState").val(jsondata.state);
+                    }
 				});
 			}
         });

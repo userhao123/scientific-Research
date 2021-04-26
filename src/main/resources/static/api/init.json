@@ -134,6 +134,12 @@
           "href": "page/table/information_table.html",
           "icon": "fa fa-superpowers",
           "target": "_self"
+        },
+        {
+          "title": "摄像头",
+          "href": "page/more/photo.html",
+          "icon": "fa fa-superpowers",
+          "target": "_self"
         }
       ]
     }

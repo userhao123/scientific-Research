@@ -14,16 +14,14 @@ import com.hao.scientificresearch.exception.ParamException;
 import com.hao.scientificresearch.mapper.CollectInformationMapper;
 import com.hao.scientificresearch.model.enums.ProjectCategoryEnum;
 import com.hao.scientificresearch.model.enums.ProjectLevelEnum;
+import com.hao.scientificresearch.model.param.MailParam;
 import com.hao.scientificresearch.model.param.ProjectInformationParam;
 import com.hao.scientificresearch.model.param.UserInformationParam;
 import com.hao.scientificresearch.model.resp.CollectInformationResp;
 import com.hao.scientificresearch.model.resp.FieldResp;
 import com.hao.scientificresearch.model.resp.UserInformationResp;
-import com.hao.scientificresearch.service.ICollectInformationService;
+import com.hao.scientificresearch.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.hao.scientificresearch.service.IProjectResearcherService;
-import com.hao.scientificresearch.service.IProjectService;
-import com.hao.scientificresearch.service.IResearcherService;
 import com.hao.scientificresearch.utils.FieldListUtil;
 import com.hao.scientificresearch.utils.FieldMapUtil;
 import com.hao.scientificresearch.vo.DataVO;
@@ -54,6 +52,8 @@ public class CollectInformationServiceImpl extends ServiceImpl<CollectInformatio
     private IProjectService projectService;
     @Autowired
     private IProjectResearcherService projectResearcherService;
+    @Autowired
+    private IMailService mailService;
 
     @Override
     public boolean add(HttpSession session, String collectName, Integer informationType, String fieldStr) {
@@ -96,8 +96,17 @@ public class CollectInformationServiceImpl extends ServiceImpl<CollectInformatio
             checkProjectMember(split,projectName);
         }
         System.out.println("姓名字符数组:" + Arrays.toString(split));
+        boolean b = false;
+        //存储收件邮箱
+        String[] to =new String[split.length];
+        Map<String, Researcher> researcherMap = researcherService.list().stream().collect(Collectors.toMap(Researcher::getName, r -> r));
+
         if (split.length > 0) {
-            for (String str : split) {
+            for (int i=0;i<split.length;i++) {
+
+                String str = split[i];
+                to[i] = researcherMap.get(str).getEmail();
+
                 CollectInformation one = this.getOne(Wrappers.lambdaQuery(CollectInformation.class).eq(CollectInformation::getUsername, str).eq(CollectInformation::getInformationType, informationType));
                 if (one != null) {
                     this.removeById(one);
@@ -113,10 +122,14 @@ public class CollectInformationServiceImpl extends ServiceImpl<CollectInformatio
                     information1.setCollector(((Researcher) loginUser).getName());
                 }
                 System.out.println("组装的实体:" + information1.toString());
-                this.save(information1);
+                b = this.save(information1);
+            }
+            if(b){
+                MailParam mailParam = new ProjectAuditServiceImpl().createMailParam("3084921312@qq.com", to, "项目收集信息通知", "你在科研管理系统的账号中有需要收集的信息，请登录系统填写！");
+                mailService.sendMail(mailParam);
             }
         }
-        return true;
+        return b;
     }
 
     @Override

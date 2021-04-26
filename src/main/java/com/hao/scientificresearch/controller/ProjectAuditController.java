@@ -11,6 +11,8 @@ import com.hao.scientificresearch.vo.DataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * <p>
  * 项目审核表 前端控制器
@@ -27,8 +29,9 @@ public class ProjectAuditController {
     private IProjectAuditService projectAuditService;
 
     @PostMapping("/audit")
-    public ResponseParam audit(AuditParam param){
-        boolean b = projectAuditService.audit(param);
+    public ResponseParam audit(@RequestBody AuditParam param, HttpSession session){
+        System.out.println("审核参数:"+param);
+        boolean b = projectAuditService.audit(param,session);
         if (b) {
             return new ResponseParam(1, "审核成功");
         }

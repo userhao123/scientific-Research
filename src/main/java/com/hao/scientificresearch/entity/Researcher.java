@@ -77,5 +77,10 @@ public class Researcher extends BaseEntity {
      */
     private String role;
 
+    /**
+     * 头像图片路径
+     */
+    private String photo;
+
 
 }

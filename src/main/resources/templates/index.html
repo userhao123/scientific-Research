@@ -46,8 +46,12 @@
                 <li class="layui-nav-item mobile layui-hide-xs" lay-unselect>
                     <a href="javascript:;" data-check-screen="full"><i class="fa fa-arrows-alt"></i></a>
                 </li>
-                <li class="layui-nav-item layuimini-setting">
-                    <a href="javascript:;" th:text="${session.loginUser.getUsername()}">admin</a>
+                <li class="layui-nav-item layui-inline layuimini-setting">
+                    <a href="javascript:;">
+                        <img src="" th:if="${session.loginUser.getPhoto() != null}" th:src="@{${session.loginUser.getPhoto()}}" class="layui-nav-img">
+                        <a href="javascript:;" th:text="${session.loginUser.getUsername()}">admin</a>
+                    </a>
+
                     <dl class="layui-nav-child">
                         <dd>
                             <a href="javascript:;" layuimini-content-href="page/user-setting.html" data-title="基本资料" data-icon="fa fa-gears">基本资料<span class="layui-badge-dot"></span></a>
@@ -119,7 +123,7 @@
 		<!-- 引入jQuery的JavaScript文件 -->
 		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-
+    // console.log("图片路径"+sessionStorage.getItem("userLogin"));
     layui.use(['jquery', 'layer', 'miniAdmin','miniTongji'], function () {
         var $ = layui.jquery,
             layer = layui.layer,

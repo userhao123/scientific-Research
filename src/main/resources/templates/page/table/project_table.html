@@ -90,6 +90,8 @@
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
 			<a class="layui-btn layui-btn-xs layui-btn-warm data-count-audit" lay-event="audit" th:if="${session.loginUser.getRole()=='auditor'}">审核</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="more">详情</a>
+
         </script>
 
     </div>

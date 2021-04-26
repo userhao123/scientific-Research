@@ -130,8 +130,8 @@
           ]
         },
         {
-          "title": "失效菜单",
-          "href": "page/error.html",
+          "title": "信息收集",
+          "href": "page/table/information_table.html",
           "icon": "fa fa-superpowers",
           "target": "_self"
         }

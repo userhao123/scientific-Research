@@ -49,11 +49,15 @@
                 <li class="layui-nav-item layuimini-setting">
                     <a href="javascript:;" th:text="${session.loginUser.getUsername()}">admin</a>
                     <dl class="layui-nav-child">
-                        <dd >
+                        <dd>
                             <a href="javascript:;" layuimini-content-href="page/user-setting.html" data-title="基本资料" data-icon="fa fa-gears">基本资料<span class="layui-badge-dot"></span></a>
                         </dd>
                         <dd>
                             <a href="javascript:;" layuimini-content-href="page/user-password.html" data-title="修改密码" data-icon="fa fa-gears">修改密码</a>
+                        </dd>
+                        <dd th:each="info:${session.infoList}">
+                            <a href="javascript:;" th:if="${info==0}" id="research1"  data-title="科研信息收集" data-icon="fa fa-gears">科研信息收集<span class="layui-badge-dot"></span></a>
+                            <a href="javascript:;" th:if="${info==1}" id="user1"  data-title="用户信息收集" data-icon="fa fa-gears">用户信息收集<span class="layui-badge-dot"></span></a>
                         </dd>
                         <dd>
                             <hr>
@@ -80,8 +84,6 @@
     </div>
 
 
-    <!-- 移动导航 -->
-<!--    <div class="layuimini-site-mobile"><i class="layui-icon"></i></div>-->
 
     <div class="layui-body">
 
@@ -117,6 +119,7 @@
 		<!-- 引入jQuery的JavaScript文件 -->
 		<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+
     layui.use(['jquery', 'layer', 'miniAdmin','miniTongji'], function () {
         var $ = layui.jquery,
             layer = layui.layer,
@@ -165,9 +168,37 @@
                     });
                 }
             });
-
-
         });
+
+        //科研信息收集弹出层
+        $('#research1').on("click",function () {
+            layer.open({
+                title: '收集信息填写表',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+                shadeClose: true,
+                area: ['45%', '60%'],
+                content: '/collect-information/collectInfoByUsername/?informationType='+0,
+            });
+        });
+        //用户信息收集弹出层
+        $('#user1').on("click",function () {
+            layer.open({
+                title: '收集信息填写表',
+                type: 2,
+                shade: 0.2,
+                maxmin:true,
+                shadeClose: true,
+                area: ['45%', '60%'],
+                content: '/collect-information/collectInfoByUsername/?informationType='+1,
+            });
+        });
+
+
+
+
+
     });
 </script>
 </body>

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hao.scientificresearch.entity.Administrator;
+import com.hao.scientificresearch.entity.CollectInformation;
 import com.hao.scientificresearch.entity.Researcher;
 import com.hao.scientificresearch.exception.ParamException;
 import com.hao.scientificresearch.mapper.ResearcherMapper;
@@ -14,8 +15,10 @@ import com.hao.scientificresearch.model.enums.EducationEnum;
 import com.hao.scientificresearch.model.param.LoginParam;
 import com.hao.scientificresearch.model.param.ResearcherSearchParam;
 import com.hao.scientificresearch.model.param.ResetPwdParam;
+import com.hao.scientificresearch.model.resp.CollectInformationResp;
 import com.hao.scientificresearch.model.resp.ResearchResp;
 import com.hao.scientificresearch.service.IAdministratorService;
+import com.hao.scientificresearch.service.ICollectInformationService;
 import com.hao.scientificresearch.service.IResearcherService;
 import com.hao.scientificresearch.utils.convert.ResearcherConvert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -37,6 +41,9 @@ public class ResearcherServiceImpl extends ServiceImpl<ResearcherMapper, Researc
 
     @Autowired
     private IAdministratorService administratorService;
+
+    @Autowired
+    private ICollectInformationService collectInformationService;
 
     @Override
     public List<ResearchResp> getList() {
@@ -130,6 +137,14 @@ public class ResearcherServiceImpl extends ServiceImpl<ResearcherMapper, Researc
         if(!researcher.getPassword().equals(param.getPassword())){
             throw new ParamException("密码不正确");
         }
+        //前端是否显示信息收集
+        List<CollectInformationResp> list = collectInformationService.getInfoListByUserName(researcher.getName());
+        List<Integer> list1 = null;
+        if(list.size()>0){
+            list1 = list.stream().map(CollectInformationResp::getInformationType).collect(Collectors.toList());
+        }
+        session.setAttribute("infoList",list1);
+
         session.setAttribute("loginUser",researcher);
         return true;
 

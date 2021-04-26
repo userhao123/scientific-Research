@@ -6,6 +6,7 @@ import com.hao.scientificresearch.model.param.ResponseParam;
 import com.hao.scientificresearch.service.IAdministratorService;
 import com.hao.scientificresearch.service.IResearcherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;

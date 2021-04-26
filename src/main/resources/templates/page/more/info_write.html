@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>科研信息收集的填写表单</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../../lib/layui-v2.5.7/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../../css/public.css" media="all">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+    </style> 
+</head>
+<body>
+<div class="layui-form layuimini-form" >
+    <div class="layui-form-item" hidden="true">
+    	<label class="layui-form-label">姓名</label>
+    	<div class="layui-input-inline">
+    		<input type="text" name="id" autocomplete="off" id="id" class="layui-input">
+    	</div>
+    </div>
+	<div class="layui-form-item" hidden="true">
+		<label class="layui-form-label">信息类型</label>
+		<div class="layui-input-inline">
+			<input type="text" th:value="${info.getInformationType()}" name="informationType" autocomplete="off" id="informationType" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item" th:if="${info.getInformationType()}==0">
+		<label class="layui-form-label">项目名</label>
+		<div class="layui-input-inline">
+			<input type="text" th:value="${info.getFieldName().get(0).getFieldName()}" name="projectName"
+				   autocomplete="off" id="project" class="layui-input layui-disabled" readonly>
+		</div>
+	</div>
+    <div class="layui-form-item" th:each="fields:${info.getFieldName()}" th:unless="${fields.getField()}=='projectName'">
+    	<label class="layui-form-label" th:text="${fields.getField()}">收集的字段</label>
+    	<div class="layui-input-block">
+    		<input type="text" name="projectName" th:name="${fields.getFieldName()}" autocomplete="off" lay-verify="required" lay-reqtext="必填项，不能为空!"
+    				id="username" th:id="${fields.getFieldName()}"	placeholder="请输入" th:placeholder="|请输入${fields.getField()}|" class="layui-input">
+    	</div>
+    </div>
+	
+	<div class="layui-form-item">
+	    <div class="layui-input-block">
+	        <button class="layui-btn layui-btn-normal" id="saveButton" lay-submit lay-filter="saveBtn">提交</button>
+	    </div>
+	</div>
+
+	
+</div>
+<script src="../../../lib/layui-v2.5.7/layui/layui.js" charset="utf-8"></script>
+<script>
+    layui.use(['form','upload'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+        	$.ajax({
+            	url: 'http://localhost:8080/collect-information/saveInfo',
+            	dataType: "json", //后端返回数据格式为json
+            	async: false,
+            	// contentType: "application/json",
+            	data: {
+            		informationType: data.field.informationType,
+            		infoStr:JSON.stringify(data.field)
+				},
+            	type: "POST", //请求方式
+            	success: function(req) { //请求成功时处理，req接收后端返回的json数据
+            		if (req.code === 1) {
+						var index = parent.layer.getFrameIndex(window.name);
+						parent.layer.close(index);
+  						parent.layer.msg("提交成功");
+            		}
+            		else {
+            			layer.msg(req.msgs, {
+            				icon: 5
+            			});
+            		}
+            	},
+            	error: function() { //请求出错处理
+            		layer.msg('请求发送异常', {
+            			icon: 5
+            		});
+            	}
+            });
+            return false;
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>图表</title>
+    <!-- 引入 ECharts 文件 -->
+    <script src="../../../lib/echarts.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+    <div id="main" style="width: 600px;height:400px;"></div>
+
+    <script type="text/javascript">
+
+        $(function () {
+            console.log("请求接口");
+            $.ajax({
+                url: 'http://localhost:8080/echarts/showNumber',
+                dataType: "json", //后端返回数据格式为json
+                async: false,
+                // contentType: "application/json",
+                // data: JSON.stringify(data.field),
+                type: "GET", //请求方式
+                success: function(req) { //请求成功时处理，req接收后端返回的json数据
+                    // 基于准备好的dom，初始化echarts实例
+                    var myChart = echarts.init(document.getElementById('main'));
+                    console.log(req.projectNum);
+                    // 指定图表的配置项和数据
+                    var option = {
+                        title: {
+                            text: 'ECharts 入门示例'
+                        },
+                        tooltip: {},
+                        legend: {
+                            data:['数量']
+                        },
+                        xAxis: {
+                            data: ["项目","人员","奖项","成果"]
+                        },
+                        yAxis: {},
+                        series: [{
+                            name: '数量',
+                            type: 'bar',
+                            data: [req.projectNum,req.researcherNum,req.awardNum,req.achievementNum]
+                        }]
+                    };
+
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.setOption(option);
+                },
+                error: function() { //请求出错处理
+                    layer.msg('请求发送异常', {
+                        icon: 5
+                    });
+                }
+            });
+        });
+
+
+    </script>
+
+</body>
+</html>

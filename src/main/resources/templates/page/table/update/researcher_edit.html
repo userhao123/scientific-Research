@@ -143,9 +143,7 @@
             	dataType: "json", //后端返回数据格式为json
             	async: true,
             	contentType: "application/json",   
-            	data: JSON.stringify(data.field), 
-				xhrFields: {withCredentials: true},
-				crossDomain: true,
+            	data: JSON.stringify(data.field),
             	type: "POST", //请求方式
             	success: function(req) { //请求成功时处理，req接收后端返回的json数据
             		if (req.code === 1) {

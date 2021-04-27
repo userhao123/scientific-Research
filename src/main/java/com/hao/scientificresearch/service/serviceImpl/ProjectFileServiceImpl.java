@@ -165,7 +165,7 @@ public class ProjectFileServiceImpl extends ServiceImpl<ProjectFileMapper, Proje
      */
     public String saveFile(MultipartFile file){
         String projectPath = System.getProperty("user.dir");
-        //文件输出流路径
+        //文件输出流路径:D:/save_data/IntelliJ-IDEA-Ultimate/scientific-Research/uploadFile/2.jpg
         String outputPath = projectPath+ File.separator +"uploadFile"+File.separator+file.getOriginalFilename();
         try {
             byte[] data = file.getBytes();
@@ -176,7 +176,10 @@ public class ProjectFileServiceImpl extends ServiceImpl<ProjectFileMapper, Proje
         } catch (IOException e) {
             throw new ParamException("上传文件失败");
         }
-        return outputPath;
+        //返回一个虚拟的文件路径，不能返回真实的存储路径，因为在前端页面中浏览器不能直接访问本地磁盘的文件
+        //在配置类中配置了虚拟路径映射，所以当浏览器访问虚拟路径时会跑到对应的本地磁盘路径访问文件
+        String virtualOutputPath = "/uploadFile/"+file.getOriginalFilename();
+        return virtualOutputPath;
     }
 
     /**

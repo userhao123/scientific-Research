@@ -34,6 +34,10 @@ spring:
           starttls:
             enable: true
             required: true
+#  修改静态资源的访问路径
+#  web:
+#    resources:
+#      static-locations: classpath:/static/,classpath:/resources/
 
 mybatis-plus:
   global-config:

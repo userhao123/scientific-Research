@@ -76,8 +76,10 @@ public class CollectInformationController {
         if(loginUser instanceof Researcher){
             CollectInformationResp info = informationService.getInfoByUserName(((Researcher) loginUser).getName(),informationType);
             model.addAttribute("info",info);
-            //向前端传递项目名
-            model.addAttribute("projectName",info.getFieldName().get(0).getFieldName());
+            if(info!=null){
+                //向前端传递项目名
+                model.addAttribute("projectName",info.getFieldName().get(0).getFieldName());
+            }
         }
         return "/page/more/info_write";
     }

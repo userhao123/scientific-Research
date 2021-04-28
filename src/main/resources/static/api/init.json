@@ -50,6 +50,12 @@
               "href": "page/table/project_researcher_table.html",
               "icon": "fa fa-tachometer",
               "target": "_self"
+            },
+            {
+              "title": "项目经费",
+              "href": "page/table/project_funds_table.html",
+              "icon": "fa fa-tachometer",
+              "target": "_self"
             }
           ]
         },
@@ -137,7 +143,7 @@
         },
         {
           "title": "图表展示",
-          "href": "page/more/echarts.html",
+          "href": "page/pay.html",
           "icon": "fa fa-superpowers",
           "target": "_self"
         }

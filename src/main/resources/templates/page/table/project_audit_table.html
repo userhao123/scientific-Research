@@ -19,7 +19,7 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">文件名</label>
+                            <label class="layui-form-label">项目名</label>
                             <div class="layui-input-inline">
                                 <input type="text" id="fileName" name="fileName" autocomplete="off" class="layui-input">
                             </div>
@@ -39,42 +39,10 @@
             </div>
         </script>
 
-        <!-- 项目阶段选项卡 -->
-        <div id="tab">
-            <div class="layui-tab layui-tab-brief" lay-filter="tab-all">
-                <ul class="layui-tab-title">
-                    <li class="layui-this">全部文件</li>
-                    <li>新建阶段</li>
-                    <li>立项阶段</li>
-                    <li>中期阶段</li>
-                    <li>结题阶段</li>
-                </ul>
-                <div class="layui-tab-content">
-                    <div class="layui-tab-item layui-show">
-                        <table class="layui-hide" id="table-all" lay-filter="currentTableFilter"></table>
-                    </div>
-                    <div class="layui-tab-item layui-show">
-                        <table class="layui-hide" id="table-new" lay-filter="currentTableFilter"></table>
-                    </div>
-                    <div class="layui-tab-item layui-show">
-                        <table class="layui-hide" id="table-confirm" lay-filter="currentTableFilter"></table>
-                    </div>
-                    <div class="layui-tab-item layui-show">
-                        <table class="layui-hide" id="table-middle" lay-filter="currentTableFilter"></table>
-                    </div>
-                    <div class="layui-tab-item layui-show">
-                        <table class="layui-hide" id="table-finish" lay-filter="currentTableFilter"></table>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-
-
-<!--		<table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>-->
+		<table class="layui-hide" id="table-all" lay-filter="currentTableFilter"></table>
 		
         <script type="text/html" id="currentTableBar">
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">下载附件</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
 
@@ -93,35 +61,13 @@
             table = layui.table;
 
         //初始化加载
-        getTable('#table-all',null);
+        getTable('#table-all');
 
-        //选项卡切换跳转
-        element.on('tab(tab-all)', function(data){
-            console.log(this); //当前Tab标题所在的原始DOM元素
-            console.log(data.index); //得到当前Tab的所在下标
-            console.log(data.elem); //得到当前的Tab大容器
-            var Index=data.index;
-            var state;
-            switch (Index) {
-                case 0: tableIndex = '#table-all'; state = null; break;
-                case 1: tableIndex = '#table-new'; state = 0; break;
-                case 2: tableIndex = '#table-confirm';state = 1; break;
-                case 3: tableIndex = '#table-middle'; state = 2; break;
-                case 4: tableIndex = '#table-finish'; state = 3; break;
-                default: tableIndex = '#table-all'; state = null; break;
-            }
-            getTable(tableIndex,state);
-        });
-
-
-        function getTable(tableIndex,tableStatus){
+        function getTable(tableIndex){
             table.render({
                 elem: tableIndex,
                 id: 'reloadTable',
                 url: 'http://localhost:8080/project-audit/page',
-                where: {
-                    state : tableStatus
-                },
                 toolbar: '#toolbarDemo',
                 defaultToolbar: ['filter', 'exports', 'print', {
                     title: '提示',
@@ -175,7 +121,7 @@
                 var checkStatus = table.checkStatus(obj.config.id),
                     data = checkStatus.data;
                 $.ajax({
-                    url: 'http://localhost:8080/project-file/batchDelete',
+                    url: 'http://localhost:8080/project-audit/batchDelete',
                     dataType: "json", //后端返回数据格式为json
                     async: true,
                     contentType: "application/json",
@@ -213,25 +159,7 @@
 
         table.on('tool(currentTableFilter)', function (obj) {
             var jsondata = obj.data;
-            if (obj.event === 'edit') {
-                layer.open({
-                    title: '下载附件',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '../table/update/project_edit.html',
-					success: function(index, layero) {
-						var body2 = layer.getChildFrame('body', layero);
-						body2.find('#name').val(jsondata.name);
-						body2.find('#leaderName').val(jsondata.leaderName);
-						body2.find('#described').val(jsondata.describe);
-						body2.find('#id').val(jsondata.id);
-					}
-                });
-                return false;
-            } else if (obj.event === 'delete') {
+            if (obj.event === 'delete') {
 				layer.confirm('真的删除行么', function(index) {
 					$.get('http://localhost:8080/project-file/delete?id=' + jsondata.id,
 						function(req) {

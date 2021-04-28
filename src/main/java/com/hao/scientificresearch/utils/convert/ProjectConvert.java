@@ -29,8 +29,13 @@ public class ProjectConvert {
             projectResp.setLevel(ProjectLevelEnum.getName(entity.getLevel()));
             projectResp.setName(entity.getName());
             projectResp.setNumber(entity.getNumber());
-            projectResp.setRemark(entity.getRemark());
+            if(entity.getFunds()==null){
+                projectResp.setFunds("0.00");
+            }else{
+                projectResp.setFunds(entity.getFunds().toString());
+            }
             projectResp.setState(ProjectStateEnum.getName(entity.getState()));
+            projectResp.setIsPay(entity.getIsPay());
         }
         return projectResp;
     }

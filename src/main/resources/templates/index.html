@@ -31,7 +31,7 @@
                 <div class="layuimini-tool"><i title="展开" class="fa fa-outdent" data-side-fold="1"></i></div>
             </a>
 
-            <!--电脑端头部菜单-->
+            <!--电脑端头部菜单  layuimini-setting-->
             <ul class="layui-nav layui-layout-left layuimini-header-menu layuimini-menu-header-pc layuimini-pc-show">
             </ul>
 
@@ -46,12 +46,15 @@
                 <li class="layui-nav-item mobile layui-hide-xs" lay-unselect>
                     <a href="javascript:;" data-check-screen="full"><i class="fa fa-arrows-alt"></i></a>
                 </li>
-                <li class="layui-nav-item layui-inline layuimini-setting">
-                    <a href="javascript:;">
-                        <img src="" th:if="${session.loginUser.getPhoto() != null}" th:src="@{${session.loginUser.getPhoto()}}" class="layui-nav-img">
-                        <a href="javascript:;" th:text="${session.loginUser.getUsername()}">admin</a>
-                    </a>
 
+                <li class="layui-nav-item mobile layui-hide-xs" lay-unselect>
+                    <a href="javascript:;" style="display: inline-block;">
+                        <img src="" th:if="${session.loginUser.getPhoto() != null}" th:src="@{${session.loginUser.getPhoto()}}" class="layui-nav-img">
+                    </a>
+                </li>
+
+                <li class="layui-nav-item layui-inline">
+                    <a href="javascript:;" th:text="${session.loginUser.getUsername()}">admin</a>
                     <dl class="layui-nav-child">
                         <dd>
                             <a href="javascript:;" layuimini-content-href="page/user-setting.html" data-title="基本资料" data-icon="fa fa-gears">基本资料<span class="layui-badge-dot"></span></a>

@@ -26,7 +26,6 @@ public class EchartsController {
 
     @GetMapping("/showNumber")
     public EchartsCountResp showNumber(){
-        System.out.println("接口调用");
         int count1 = projectService.count();
         int count2 = researcherService.count();
         int count3 = awardService.count();

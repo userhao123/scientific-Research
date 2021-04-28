@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../lib/layui-v2.5.7/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/public.css" media="all">
+</head>
+<body>
+<div class="layuimini-container">
+    <div class="layuimini-main">
+
+<!--        <fieldset class="table-search-fieldset">-->
+<!--            <legend>搜索信息</legend>-->
+<!--            <div style="margin: 10px 10px 10px 10px">-->
+<!--                <form class="layui-form layui-form-pane" action="">-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <div class="layui-inline">-->
+<!--                            <label class="layui-form-label">项目名</label>-->
+<!--                            <div class="layui-input-inline">-->
+<!--                                <input type="text" id="projectName" name="projectName" autocomplete="off" class="layui-input">-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-inline">-->
+<!--                            <label class="layui-form-label">成员名</label>-->
+<!--                            <div class="layui-input-inline">-->
+<!--                                <input type="text" id="researcherName" name="researcherName" autocomplete="off" class="layui-input">-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="layui-inline">-->
+<!--                            <button type="submit" class="layui-btn layui-btn-normal"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>-->
+<!--							<button type="reset" class="layui-btn layui-btn-warm"><i class="layui-icon">&#xe640;</i> 清空</button>-->
+<!--						</div>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </fieldset>-->
+
+
+		<table class="layui-hide" id="table-all" lay-filter="currentTableFilter"></table>
+		
+        <script type="text/html" id="currentTableBar">
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+        </script>
+
+    </div>
+</div>
+
+		<!-- 引入jQuery的JavaScript文件 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="../../lib/layui-v2.5.7/layui/layui.js" charset="utf-8"></script>
+<script>
+	var table;
+	var projectId,projectState;
+    layui.use(['form', 'table', 'element'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table;
+
+        //初始化加载
+        getTable('#table-all');
+
+
+        function getTable(tableIndex){
+            table.render({
+                elem: tableIndex,
+                id: 'reloadTable',
+                url: 'http://localhost:8080/project-funds/page',
+                toolbar: '#toolbarDemo',
+                defaultToolbar: ['filter', 'exports', 'print', {
+                    title: '提示',
+                    layEvent: 'LAYTABLE_TIPS',
+                    icon: 'layui-icon-tips'
+                }],
+                cols: [
+                    [
+                    {type: "checkbox", width: 50},
+                    {field: 'projectName', width: 200, title: '项目名'},
+                    {field: 'payStatus', width: 200, title: '交易状态'},
+                        {field: 'payTime', width: 180, title: '支付时间',
+                            templet:"<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div> "
+                        },
+                        {field: 'totalAmount', width: 200, title: '支付金额'},
+                        {field: 'sellerId', width: 200, title: '收款账号'},
+                        {field: 'orderNumber', width: 200, title: '订单号'},
+                        {field: 'payNumber', width: 300, title: '交易号'},
+                    {title: '操作', minWidth: 300, toolbar: '#currentTableBar', align: "center"}
+                ]
+                ],
+                limits: [10, 15, 20, 25, 50, 100],
+                limit: 15,
+                page: true,
+                skin: 'line'
+            });
+
+        }
+
+
+        // 监听搜索操作
+        // form.on('submit(data-search-btn)', function (data) {
+        //     var result = JSON.stringify(data.field);
+		// 	table.reload('reloadTable', {
+		// 	    page: {
+		// 	        curr: 1
+		// 	    }
+		// 	    , where: {
+		// 			condition: result
+		// 		}
+		// 	},'data');
+		//
+        //     return false;
+        // });
+
+
+        table.on('tool(currentTableFilter)', function (obj) {
+            var jsondata = obj.data;
+            if (obj.event === 'delete') {
+                layer.confirm('真的删除行么', function(index) {
+                    $.get('http://localhost:8080/project-funds/delete?id=' + jsondata.id,
+                        function(req) {
+                            if (req.code === 1) {
+                                obj.del();
+                                layer.msg('删除成功');
+                            } else {
+                                layer.msg(req.msg, {
+                                    icon: 5
+                                });
+                            }
+                        });
+                    layer.close(index);
+                });
+            }
+        });
+
+    });
+	
+</script>
+
+</body>
+</html>

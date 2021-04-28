@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../lib/layui-v2.5.7/layui/css/layui.css" media="all">
+</head>
+<body>
+
+<!--    <div>-->
+<!--        <form action="/Alipay/pay" method="post">-->
+
+<!--            订单号：<input type="text" name="orderNum" required><br/>-->
+
+<!--            订单名称：<input type="text" name="orderName" required><br/>-->
+
+<!--            付款金额：<input type="text" name="payMoney" required><br/>-->
+
+<!--&lt;!&ndash;            WIDbody：<input type="text" name="WIDbody"><br/>&ndash;&gt;-->
+
+<!--            <input type="submit" value="下单"> <input type="reset" value="重置">-->
+
+<!--        </form>-->
+
+
+<!--    </div>-->
+
+
+<div class="layui-form layuimini-form">
+    <div class="layui-form-item" hidden="true">
+        <label class="layui-form-label">id</label>
+        <div class="layui-input-inline">
+            <input type="text" name="id" autocomplete="off" id="id" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">订单号</label>
+        <div class="layui-input-block">
+            <input type="text" name="orderNum" autocomplete="off" lay-verify="required" lay-reqtext="奖项名是必填项，不能为空!"
+                   id="orderNum"	placeholder="请输入订单号" class="layui-input">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">订单名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="orderName" autocomplete="off" lay-verify="required" lay-reqtext="项目名是必填项，不能为空!"
+                   id="orderName"	placeholder="请输入订单名称" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">付款金额</label>
+        <div class="layui-input-block">
+            <input type="text" name="payMoney" autocomplete="off" lay-verify="required" lay-reqtext="颁奖单位是必填项，不能为空!"
+                   id="payMoney"	placeholder="请输入金额" class="layui-input">
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认提交</button>
+        </div>
+    </div>
+
+
+
+</div>
+
+<script src="../lib/layui-v2.5.7/layui/layui.js" charset="utf-8"></script>
+
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            $.ajax({
+                url: 'http://localhost:8080/Alipay/pay',
+                dataType: "html", //后端返回数据格式为html
+                async: true,
+                // contentType: "application/json",
+                data: data.field,
+                type: "POST", //请求方式
+                success: function(req) { //请求成功时处理，req接收后端返回的json数据
+                    layer.msg('调用Alipay接口成功');
+                    console.log(req);
+                    // $(document.body).html(req);
+                    // document.write(req);
+                    //新打开一个页面（about:blank是打开浏览器空白页的命令）, _blank：打开一个新的窗口
+                    //_top : 如果页面上有framesets,则url会取代framesets的最顶层, 如果没有framesets, 则效果等同于_self.
+                    var newPage = window.open("about:blank", "_top");
+                    //将后台传过来的html页面写到新打开的浏览器窗口中显示
+                    newPage.document.write(req);
+                },
+                error: function(req) { //请求出错处理
+                    layer.msg('请求发送异常', {
+                        icon: 5
+                    });
+                    console.log(req);
+                }
+            });
+
+            return false;
+        });
+
+    });
+</script>
+
+
+
+
+</body>
+</html>

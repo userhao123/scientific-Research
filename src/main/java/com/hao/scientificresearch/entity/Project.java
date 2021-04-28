@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -75,9 +76,14 @@ public class Project extends BaseEntity {
     private String audit;
 
     /**
-     * 审核备注
+     * 项目经费
      */
-    private String remark;
+    private BigDecimal funds;
+
+    /**
+     * 是否已支付
+     */
+    private Boolean isPay;
 
 
 }

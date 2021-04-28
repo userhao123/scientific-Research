@@ -205,6 +205,7 @@ public class CollectInformationServiceImpl extends ServiceImpl<CollectInformatio
         if (researcher == null) {
             throw new ParamException("无此用户的信息");
         }
+        boolean resp = false;
         if (informationType == 1) {
             UserInformationParam param = JSONUtil.toBean(infoStr, UserInformationParam.class);
             if (param.getCollege() != null) researcher.setCollege(param.getCollege());
@@ -213,7 +214,7 @@ public class CollectInformationServiceImpl extends ServiceImpl<CollectInformatio
             if (param.getPhone() != null) researcher.setPhone(param.getPhone());
             if (param.getTitle() != null) researcher.setTitle(param.getTitle());
             if (param.getUsername() != null) researcher.setUsername(param.getUsername());
-            return researcherService.updateById(researcher);
+            resp = researcherService.updateById(researcher);
         }else if(informationType == 0){
             ProjectInformationParam param = JSONUtil.toBean(infoStr, ProjectInformationParam.class);
             Project project = projectService.getOne(Wrappers.lambdaQuery(Project.class).eq(Project::getName, param.getProjectName()));
@@ -224,9 +225,11 @@ public class CollectInformationServiceImpl extends ServiceImpl<CollectInformatio
                 Researcher one = researcherService.getOne(Wrappers.lambdaQuery(Researcher.class).eq(Researcher::getName, param.getLeaderName()));
                 project.setLeaderId(one.getId());
             }
-            return projectService.updateById(project);
+            resp = projectService.updateById(project);
         }
-
+        if(resp){
+           return this.remove(Wrappers.lambdaQuery(CollectInformation.class).eq(CollectInformation::getInformationType,informationType).eq(CollectInformation::getUsername,name));
+        }
         return true;
     }
 

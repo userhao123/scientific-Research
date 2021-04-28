@@ -15,7 +15,10 @@
     </style> 
 </head>
 <body>
-<div class="layui-form layuimini-form" >
+
+<div th:if="${info==null}"><h2>信息已填写，无需重复填写</h2></div>
+
+<div class="layui-form layuimini-form" th:if="${info!=null}">
     <div class="layui-form-item" hidden="true">
     	<label class="layui-form-label">姓名</label>
     	<div class="layui-input-inline">

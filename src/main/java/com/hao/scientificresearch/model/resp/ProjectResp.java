@@ -3,6 +3,7 @@ package com.hao.scientificresearch.model.resp;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -72,8 +73,13 @@ public class ProjectResp {
     private String audit;
 
     /**
-     * 审核备注
+     * 项目经费
      */
-    private String remark;
+    private String funds;
+
+    /**
+     * 是否已支付经费
+     */
+    private Boolean isPay;
 
 }

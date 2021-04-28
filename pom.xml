@@ -101,6 +101,20 @@
             <version>1.0.6</version>
         </dependency>
 
+        <!-- 支付宝SDK的依赖包 -->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+
+<!--        &lt;!&ndash; servlet 依赖包 &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>javax.servlet</groupId>-->
+<!--            <artifactId>javax.servlet-api</artifactId>-->
+<!--        </dependency>-->
+
 
     </dependencies>
 

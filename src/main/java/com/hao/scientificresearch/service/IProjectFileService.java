@@ -31,5 +31,5 @@ public interface IProjectFileService extends IService<ProjectFile> {
 
     boolean download(Integer id, HttpServletResponse response);
 
-
+    boolean download(String pathName, HttpServletResponse response);
 }

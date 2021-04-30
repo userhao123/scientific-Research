@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hao.scientificresearch.entity.Project;
+import com.hao.scientificresearch.entity.ProjectFile;
 import com.hao.scientificresearch.entity.ProjectResearcher;
 import com.hao.scientificresearch.entity.Researcher;
 import com.hao.scientificresearch.exception.ParamException;
@@ -17,6 +18,7 @@ import com.hao.scientificresearch.model.param.ProjectParam;
 import com.hao.scientificresearch.model.param.ProjectSearchParam;
 import com.hao.scientificresearch.model.resp.AddProjectFileResp;
 import com.hao.scientificresearch.model.resp.ProjectResp;
+import com.hao.scientificresearch.service.IProjectFileService;
 import com.hao.scientificresearch.service.IProjectResearcherService;
 import com.hao.scientificresearch.service.IProjectService;
 import com.hao.scientificresearch.service.IResearcherService;
@@ -44,6 +46,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     private IResearcherService researcherService;
     @Autowired
     private IProjectResearcherService projectResearcherService;
+    @Autowired
+    private IProjectFileService projectFileService;
 
 
     @Override
@@ -70,10 +74,26 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         Page<ProjectResp> respPage = new Page<>(projectPage.getCurrent(), projectPage.getSize(), projectPage.getTotal());
         if (CollectionUtil.isNotEmpty(records)) {
             List<ProjectResp> resps = new ArrayList<>();
-            Map<Integer, Researcher> map = researcherService.list().stream().collect(Collectors.toMap(Researcher::getId, r -> r));
+            Map<Integer, Researcher> researcherMap = researcherService.list().stream().collect(Collectors.toMap(Researcher::getId, r -> r));
+            //组装项目成员
+            Map<Integer, List<ProjectResearcher>> memberMap = projectResearcherService.list().stream().collect(Collectors.groupingBy(ProjectResearcher::getProjectId));
             for (Project p : records) {
                 ProjectResp resp = ProjectConvert.change2resp(p);
-                resp.setLeaderName(map.get(resp.getLeaderId()).getName());
+                resp.setLeaderName(researcherMap.get(resp.getLeaderId()).getName());
+                StringBuilder sb = new StringBuilder();
+                List<ProjectResearcher> list = memberMap.get(p.getId());
+                if(CollectionUtil.isNotEmpty(list)){
+                   List<Integer> researcherId =  list.stream().map(ProjectResearcher::getResearcherId).collect(Collectors.toList());
+                    for(int i:researcherId){
+                        sb.append(researcherMap.get(i).getName()).append(",");
+                    }
+                }
+                resp.setMember(sb.toString());
+                ProjectFile file = projectFileService.getOne(Wrappers.lambdaQuery(ProjectFile.class).eq(ProjectFile::getProjectId, p.getId()).eq(ProjectFile::getProjectState, p.getState()));
+                if(file!=null){
+                    resp.setFileName(file.getFilePath().substring(file.getFilePath().lastIndexOf("/")+1));
+                    resp.setUploadTime(file.getUploadTime());
+                }
                 resps.add(resp);
             }
             respPage.setRecords(resps);

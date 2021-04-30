@@ -74,7 +74,7 @@
 <!--		<table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>-->
 		
         <script type="text/html" id="currentTableBar">
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">下载附件</a>
+            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="download">下载附件</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
 
@@ -212,7 +212,7 @@
 
         table.on('tool(currentTableFilter)', function (obj) {
             var jsondata = obj.data;
-            if (obj.event === 'edit') {
+            if (obj.event === 'download') {
                 window.location.href="http://localhost:8080/project-file/download?id="+jsondata.id;
                 return false;
             } else if (obj.event === 'delete') {

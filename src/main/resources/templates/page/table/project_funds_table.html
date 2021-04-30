@@ -13,33 +13,6 @@
 <div class="layuimini-container">
     <div class="layuimini-main">
 
-<!--        <fieldset class="table-search-fieldset">-->
-<!--            <legend>搜索信息</legend>-->
-<!--            <div style="margin: 10px 10px 10px 10px">-->
-<!--                <form class="layui-form layui-form-pane" action="">-->
-<!--                    <div class="layui-form-item">-->
-<!--                        <div class="layui-inline">-->
-<!--                            <label class="layui-form-label">项目名</label>-->
-<!--                            <div class="layui-input-inline">-->
-<!--                                <input type="text" id="projectName" name="projectName" autocomplete="off" class="layui-input">-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="layui-inline">-->
-<!--                            <label class="layui-form-label">成员名</label>-->
-<!--                            <div class="layui-input-inline">-->
-<!--                                <input type="text" id="researcherName" name="researcherName" autocomplete="off" class="layui-input">-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="layui-inline">-->
-<!--                            <button type="submit" class="layui-btn layui-btn-normal"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>-->
-<!--							<button type="reset" class="layui-btn layui-btn-warm"><i class="layui-icon">&#xe640;</i> 清空</button>-->
-<!--						</div>-->
-<!--                    </div>-->
-<!--                </form>-->
-<!--            </div>-->
-<!--        </fieldset>-->
-
-
 		<table class="layui-hide" id="table-all" lay-filter="currentTableFilter"></table>
 		
         <script type="text/html" id="currentTableBar">
@@ -81,7 +54,7 @@
                     {field: 'projectName', width: 200, title: '项目名'},
                     {field: 'payStatus', width: 200, title: '交易状态'},
                         {field: 'payTime', width: 180, title: '支付时间',
-                            templet:"<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div> "
+                            templet:"<div>{{layui.util.toDateString(d.payTime, 'yyyy-MM-dd HH:mm:ss')}}</div> "
                         },
                         {field: 'totalAmount', width: 200, title: '支付金额'},
                         {field: 'sellerId', width: 200, title: '收款账号'},
@@ -98,21 +71,6 @@
 
         }
 
-
-        // 监听搜索操作
-        // form.on('submit(data-search-btn)', function (data) {
-        //     var result = JSON.stringify(data.field);
-		// 	table.reload('reloadTable', {
-		// 	    page: {
-		// 	        curr: 1
-		// 	    }
-		// 	    , where: {
-		// 			condition: result
-		// 		}
-		// 	},'data');
-		//
-        //     return false;
-        // });
 
 
         table.on('tool(currentTableFilter)', function (obj) {

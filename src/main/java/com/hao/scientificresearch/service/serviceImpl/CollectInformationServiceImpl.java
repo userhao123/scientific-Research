@@ -125,6 +125,11 @@ public class CollectInformationServiceImpl extends ServiceImpl<CollectInformatio
                 b = this.save(information1);
             }
             if(b){
+                //校验邮箱格式
+                boolean b1 = MailServiceImpl.checkMail(to);
+                if(!b1){
+                    throw new ParamException("收集信息成功，但用户邮箱格式错误，不能发送邮件通知用户");
+                }
                 MailParam mailParam = new ProjectAuditServiceImpl().createMailParam("3084921312@qq.com", to, "项目收集信息通知", "你在科研管理系统的账号中有需要收集的信息，请登录系统填写！");
                 mailService.sendMail(mailParam);
             }

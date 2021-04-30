@@ -158,6 +158,18 @@ public class ProjectFileServiceImpl extends ServiceImpl<ProjectFileMapper, Proje
         return true;
     }
 
+    @Override
+    public boolean download(String pathName, HttpServletResponse response) {
+
+        try {
+            downloadFile(pathName,response);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            System.out.println("下载文件失败");
+        }
+        return true;
+    }
+
 
     /**保存文件，即写到磁盘中
      * @Return 文件输出流路径
@@ -189,7 +201,9 @@ public class ProjectFileServiceImpl extends ServiceImpl<ProjectFileMapper, Proje
      * @param res
      */
     public void downloadFile(String path,HttpServletResponse res) throws UnsupportedEncodingException {
-        File file=new File(path);
+        //拼接成完整的本地磁盘的文件路径
+        String downPath = System.getProperty("user.dir") + path;
+        File file=new File(downPath);
         String fileName = file.getName();
 
         res.setHeader("content-type", "application/octet-stream");

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,11 +48,18 @@ public class ProjectFileController {
         projectFileService.upload(file,projectId);
     }
 
-
+    //项目附件表中的下载
     @GetMapping("/download")
     public void download(@RequestParam("id") Integer id, HttpServletResponse response){
         boolean b = projectFileService.download(id, response);
         System.out.println("文件下载成功");
+    }
+
+    //项目详情页面中的附件下载
+    @GetMapping("/detailDownload")
+    public void download(@RequestParam("pathName") String pathName, HttpServletResponse response){
+        System.out.println("下载的文件路径:"+pathName);
+        boolean b = projectFileService.download(File.separator+"uploadFile"+File.separator+pathName, response);
     }
 
     @GetMapping("/page")

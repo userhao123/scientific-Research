@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class MailServiceImpl implements IMailService {
@@ -41,5 +43,27 @@ public class MailServiceImpl implements IMailService {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     *
+     * @param to 邮箱字符串数组
+     * @return  是否符合邮箱格式
+     */
+    public static boolean checkMail(String[] to){
+        boolean b;
+        Pattern pattern=Pattern.compile("^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
+        for(String str:to){
+           b = pattern.matcher(str).matches();
+           if(!b){
+               return false;
+           }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        String[] to =new String[]{"123@qq.com","3084921312@qq.com"};
+        System.out.println("邮箱格式:"+checkMail(to));
     }
 }

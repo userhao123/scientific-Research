@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<!--    <link rel="stylesheet" href="../../lib/layui-v2.5.7/layui/css/layui.css" media="all">-->
+<!--    <link rel="stylesheet" href="../../css/public.css" media="all">-->
+</head>
+<body>
+
+<blockquote class="layui-elem-quote layui-quote-nm">
+    <div class="layui-inline">
+        <p>项目名:
+            <span type="text" id="name" class="layui-form-label" >项目1</span>
+        </p>
+    </div>
+</blockquote>
+
+<blockquote class="layui-elem-quote layui-quote-nm">
+    <div class="layui-inline">
+        <p>项目编号:
+            <span type="text" id="number" class="layui-form-label" >pro123456</span>
+        </p>
+    </div>
+</blockquote>
+
+<blockquote class="layui-elem-quote layui-quote-nm">
+    <div class="layui-inline">
+        <p>创建时间:
+            <span type="text" id="createTime" class="layui-form-label" >2021-04-24 10:02</span>
+        </p>
+    </div>
+</blockquote>
+
+<blockquote class="layui-elem-quote layui-quote-nm">
+    <div class="layui-inline">
+        <p>结项时间:
+            <span type="text" id="finishTime" class="layui-form-label" >未结项</span>
+        </p>
+    </div>
+</blockquote>
+
+<blockquote class="layui-elem-quote layui-quote-nm">
+    <div class="layui-inline">
+        <p>项目阶段:
+            <span type="text" id="state" class="layui-form-label" >新建</span>
+        </p>
+    </div>
+</blockquote>
+
+<blockquote class="layui-elem-quote layui-quote-nm">
+    <div class="layui-inline">
+        <p>负责人:
+            <span type="text" id="leaderName" class="layui-form-label" >lin</span>
+        </p>
+    </div>
+</blockquote>
+
+<blockquote class="layui-elem-quote layui-quote-nm">
+    <div class="layui-inline">
+        <p>项目成员:
+            <span type="text" id="member" class="layui-form-label" >hao,666</span>
+        </p>
+    </div>
+</blockquote>
+
+<blockquote class="layui-elem-quote layui-quote-nm">
+    <div class="layui-inline">
+        <p>项目类别:
+            <span type="text" id="category" class="layui-form-label" >基础研究</span>
+        </p>
+    </div>
+</blockquote>
+
+<blockquote class="layui-elem-quote layui-quote-nm">
+    <div class="layui-inline">
+        <p>级别:
+            <span type="text" id="level" class="layui-form-label" >校级</span>
+        </p>
+    </div>
+</blockquote>
+
+<blockquote class="layui-elem-quote layui-quote-nm">
+    <div class="layui-inline">
+        <p class="layui-inline">经费:
+            <span type="text" id="funds" class="layui-form-label layui-inline" >2000</span>
+        </p>
+    </div>
+</blockquote>
+
+<blockquote class="layui-elem-quote layui-quote-nm">
+    <div class="layui-inline">
+        <p class="layui-inline">是否已支付经费:
+            <span type="text" id="isPay" class="layui-form-label layui-inline" >是</span>
+        </p>
+    </div>
+</blockquote>
+
+<blockquote class="layui-elem-quote layui-quote-nm">
+    <div class="layui-inline">
+        审核状态: <span type="text" id="audit" class="layui-form-label layui-inline" >待审核</span>
+    </div>
+</blockquote>
+
+<blockquote class="layui-elem-quote layui-quote-nm">
+    <div class="layui-inline">
+        <p>附件:
+            <span type="text" id="fileName" class="layui-form-label" >附件.doc</span>
+        </p>
+        <button type="button" id="downloadBtn" class="layui-btn layui-btn-normal layui-btn-sm layui-btn-radius">下载附件</button>
+    </div>
+</blockquote>
+
+<blockquote class="layui-elem-quote layui-quote-nm">
+    <div class="layui-inline">
+        <p>附件上传时间:
+            <span type="text" id="uploadTime" class="layui-form-label" >2021-04-24 10:03</span>
+        </p>
+    </div>
+</blockquote>
+
+
+<blockquote class="layui-elem-quote layui-quote-nm">
+    <fieldset class="layui-elem-field">
+        <legend>项目描述</legend>
+        <div class="layui-field-box" id="described">
+            你可以在这里放任何内容，比如表单神马的
+        </div>
+    </fieldset>
+</blockquote>
+
+
+<!-- 引入jQuery的JavaScript文件 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="../../lib/layui-v2.5.7/layui/layui.js" charset="utf-8"></script>
+<script>
+
+    $('#downloadBtn').on('click',function () {
+        var fileName = $('#fileName').text();
+        console.log("文件名:"+fileName);
+        window.location.href="http://localhost:8080/project-file/detailDownload?pathName="+fileName;
+        return false;
+        // $.ajax({
+        //     url: 'http://localhost:8080/project-file/detailDownload',
+        //     dataType: "json", //后端返回数据格式为html
+        //     async: true,
+        //     // contentType: "application/json",
+        //     data: {
+        //         fileName: fileName
+        //     },
+        //     type: "GET", //请求方式
+        //     success: function(req) { //请求成功时处理，req接收后端返回的json数据
+        //         layer.msg('下载成功',{
+        //             icon: 6
+        //         })
+        //     },
+        //     error: function(req) { //请求出错处理
+        //         layer.msg('请求发送异常', {
+        //             icon: 5
+        //         });
+        //         console.log(req);
+        //     }
+        // });
+    })
+
+
+
+</script>
+
+</body>
+</html>

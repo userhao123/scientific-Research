@@ -82,4 +82,19 @@ public class ProjectResp {
      */
     private Boolean isPay;
 
+    /**
+     * 项目成员
+     */
+    private String member;
+
+    /**
+     * 项目附件名
+     */
+    private String fileName;
+
+    /**
+     * 附件上传时间
+     */
+    private LocalDateTime uploadTime;
+
 }

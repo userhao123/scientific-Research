@@ -106,11 +106,10 @@
 						var index = parent.layer.getFrameIndex(window.name);
 						parent.layer.close(index);
 						parent.layer.msg("提交成功");
-            		}else if(req.code === 1000){
+            		}else if(req.code === 4000){
             			layer.msg(req.msgs,{
             				icon: 5
 						});
-            			top.location.href = '../login.html';
 					}
             		else {
             			layer.msg(req.msgs, {

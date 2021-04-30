@@ -153,17 +153,14 @@
                     {field: 'id', width: 80, title: 'ID', sort: true},
                     {field: 'number', width: 100, title: '编号'},
                     {field: 'name', width: 110, title: '项目名'},
-                    {field: 'described', width: 100, title: '描述'},
                     {field: 'state', title: '阶段', width: 110},
                     {field: 'leaderName', width: 80, title: '负责人'},
                     {field: 'category', width: 150, title: '类别'},
                     {field: 'level', width: 80, title: '级别'},
                         {field: 'funds', width: 80, title: '经费'},
-                        {field: 'audit', width: 80, title: '审核'},
                     {field: 'createTime', width: 180, title: '创建时间',
                         templet:"<div>{{layui.util.toDateString(d.createTime, 'yyyy-MM-dd HH:mm:ss')}}</div> "
                     },
-                    {field: 'finishTime', width: 50, title: '结项时间'},
                     {title: '操作', minWidth: 300, toolbar: '#currentTableBar', align: "center"}
                 ]
                 ],
@@ -303,17 +300,51 @@
 
             }else if(obj.event === 'more'){
                 layer.open({
-                    title: '审核项目',
+                    title: '项目详情',
                     type: 2,
                     shade: 0.2,
                     maxmin:true,
                     shadeClose: true,
-                    area: ['60%', '60%'],
-                    content: '../table/update/project_audit.html',
+                    area: ['100%', '100%'],
+                    content: '../table/project_detail.html',
                     success: function(index, layero) {
                         var body2 = layer.getChildFrame('body', layero);
-                        body2.find('#projectId').val(jsondata.id);
-                        body2.find("#auditState").val(jsondata.state);
+
+                        body2.find('#projectId').text(jsondata.id);
+                        body2.find("#state").text(jsondata.state);
+                        body2.find("#name").text(jsondata.name);
+                        body2.find("#number").text(jsondata.number);
+                        body2.find("#createTime").text(jsondata.createTime);
+                        body2.find("#funds").text(jsondata.funds);
+                        body2.find("#member").text(jsondata.member);
+                        body2.find("#category").text(jsondata.category);
+                        body2.find("#level").text(jsondata.level);
+                        body2.find("#described").text(jsondata.described);
+                        body2.find("#audit").text(jsondata.audit);
+
+                        if(jsondata.isPay===true){
+                            body2.find("#isPay").text("是");
+                        }else {
+                            body2.find("#isPay").text("否");
+                        }
+                        if(jsondata.fileName==null){
+                            body2.find("#fileName").text("无附件");
+                            body2.find("#downloadBtn").hide();
+                        }else{
+                            body2.find("#fileName").text(jsondata.fileName);
+                        }
+                        if(jsondata.uploadTime==null){
+                            body2.find("#uploadTime").hide();
+                        }else {
+                            body2.find("#uploadTime").text(jsondata.uploadTime);
+                        }
+                        if(jsondata.finishTime==null){
+                            body2.find("#finishTime").text("未结项");
+                        }else {
+                            body2.find("#finishTime").text(jsondata.finishTime);
+                        }
+
+
                     }
                 });
             }

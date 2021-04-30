@@ -99,11 +99,6 @@
 								parent.table.reload('reloadTable', {
 									url: 'http://localhost:8080/project/page'
 								});
-							}else if(req.code === 1000){
-								layer.msg(req.msgs,{
-									icon: 5
-								});
-								top.location.href = '../../login.html';
 							} else {
 								layer.msg(req.msgs, {
 									icon: 5

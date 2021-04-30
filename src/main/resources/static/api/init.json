@@ -146,6 +146,12 @@
           "href": "page/pay.html",
           "icon": "fa fa-superpowers",
           "target": "_self"
+        },
+        {
+          "title": "智能分类",
+          "href": "page/table/update/classifier_form.html",
+          "icon": "fa fa-superpowers",
+          "target": "_self"
         }
       ]
     }

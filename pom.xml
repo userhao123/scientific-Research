@@ -13,9 +13,19 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>scientific-research</name>
     <description>Demo project for Spring Boot</description>
+
     <properties>
         <java.version>1.8</java.version>
+        <guava.version>19.0-rc2</guava.version>
+        <mahout-core.version>0.9</mahout-core.version>
+        <mahout-math.version>0.9</mahout-math.version>
+        <weka-stable.version>3.8.0</weka-stable.version>
+        <ansj_seg.version>0.9</ansj_seg.version>
+        <LibSVM.version>1.0.8</LibSVM.version>
+        <commons-math3.version>3.6.1</commons-math3.version>
     </properties>
+
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -115,6 +125,53 @@
 <!--            <artifactId>javax.servlet-api</artifactId>-->
 <!--        </dependency>-->
 
+
+        <!--Guava-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
+        <!--mahout-->
+        <dependency>
+            <groupId>org.apache.mahout</groupId>
+            <artifactId>mahout-core</artifactId>
+            <version>${mahout-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.mahout</groupId>
+            <artifactId>mahout-math</artifactId>
+            <version>${mahout-math.version}</version>
+        </dependency>
+
+        <!--weka-->
+        <dependency>
+            <groupId>nz.ac.waikato.cms.weka</groupId>
+            <artifactId>weka-stable</artifactId>
+            <version>${weka-stable.version}</version>
+        </dependency>
+
+        <!--ansj_seg-->
+        <dependency>
+            <groupId>org.ansj</groupId>
+            <artifactId>ansj_seg</artifactId>
+            <version>${ansj_seg.version}</version>
+        </dependency>
+
+        <!--weka svm-->
+        <dependency>
+            <groupId>nz.ac.waikato.cms.weka</groupId>
+            <artifactId>LibSVM</artifactId>
+            <version>${LibSVM.version}</version>
+        </dependency>
+
+        <!--commons-math3-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>${commons-math3.version}</version>
+        </dependency>
 
     </dependencies>
 

@@ -21,6 +21,7 @@ import com.hao.scientificresearch.service.IAdministratorService;
 import com.hao.scientificresearch.service.ICollectInformationService;
 import com.hao.scientificresearch.service.IProjectFileService;
 import com.hao.scientificresearch.service.IResearcherService;
+import com.hao.scientificresearch.utils.StartService;
 import com.hao.scientificresearch.utils.convert.ResearcherConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -139,7 +140,7 @@ public class ResearcherServiceImpl extends ServiceImpl<ResearcherMapper, Researc
         if(!researcher.getPassword().equals(param.getPassword())){
             throw new ParamException("密码不正确");
         }
-        //前端是否显示信息收集
+        //前端是否显示信息收集下拉选项
         List<CollectInformationResp> list = collectInformationService.getInfoListByUserName(researcher.getName());
         List<Integer> list1 = null;
         if(list.size()>0){
@@ -147,6 +148,14 @@ public class ResearcherServiceImpl extends ServiceImpl<ResearcherMapper, Researc
         }
         session.setAttribute("infoList",list1);
 
+        //将项目启动时爬取的科研动态信息,返回首页获取展示
+        if(CollectionUtil.isNotEmpty(StartService.SPIDER_LIST)){
+            System.out.println("爬虫有数据");
+            session.setAttribute("spider_data", StartService.SPIDER_LIST);
+        }else{
+            System.out.println("爬虫数据为空");
+        }
+        //session保存用户信息
         session.setAttribute("loginUser",researcher);
         return true;
 

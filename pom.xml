@@ -173,6 +173,15 @@
             <version>${commons-math3.version}</version>
         </dependency>
 
+
+        <!-- jsoup Java爬虫-->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.8.3</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

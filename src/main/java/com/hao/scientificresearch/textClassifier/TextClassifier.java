@@ -102,6 +102,8 @@ public class TextClassifier {
         Map<String, Double> wordWeightMap = Maps.newHashMap();
         wordWeightMap.put("体育",5.0);
         wordWeightMap.put("互联网",1.6);
+        wordWeightMap.put("文化、体育和娱乐业",5.0);
+        wordWeightMap.put("信息传输，软件和信息技术服务业",5.0);
         wordWeightMap.put("财经",1.6);
         wordWeightMap.put("金融",1.6);
 
@@ -117,10 +119,10 @@ public class TextClassifier {
     private static String printClass(double[] classProb) {
 
         ArrayList<String> list = new ArrayList<>(4);
-        list.add("体育");
-        list.add("互联网");
-        list.add("财经");
-        list.add("其他");
+        list.add("文化、体育和娱乐业");
+        list.add("信息传输，软件和信息技术服务业");
+        list.add("金融业");
+        list.add("其他行业");
         System.out.println("sport 概率" + classProb[0]);
         System.out.println("it 概率" + classProb[1]);
         System.out.println("finance 概率" + classProb[2]);

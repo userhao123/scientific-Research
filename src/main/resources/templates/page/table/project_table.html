@@ -90,7 +90,7 @@
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
 			<a class="layui-btn layui-btn-xs layui-btn-warm data-count-audit" lay-event="audit" th:if="${session.loginUser.getRole()=='auditor'}">审核</a>
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="pay" th:if="${session.loginUser.getRole()=='auditor'}">支付</a>
+<!--            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="pay" th:if="${session.loginUser.getRole()=='auditor'}">支付</a>-->
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="more">详情</a>
 
         </script>
@@ -150,7 +150,7 @@
                 cols: [
                     [
                     {type: "checkbox", width: 50},
-                    {field: 'id', width: 80, title: 'ID', sort: true},
+                    // {field: 'id', width: 80, title: 'ID', sort: true},
                     {field: 'number', width: 100, title: '编号'},
                     {field: 'name', width: 110, title: '项目名'},
                     {field: 'state', title: '阶段', width: 110},

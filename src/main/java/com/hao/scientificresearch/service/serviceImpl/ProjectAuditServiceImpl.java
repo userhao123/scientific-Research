@@ -82,12 +82,12 @@ public class ProjectAuditServiceImpl extends ServiceImpl<ProjectAuditMapper, Pro
                 int size = researcherIds.size();
                 //组装收件邮箱
                 String[] toStr = new String[size];
+                for(int i = 0; i< size; i++){
+                    toStr[i] = researcherMap.get(researcherIds.get(i)).getEmail();
+                }
                 boolean mail = MailServiceImpl.checkMail(toStr);
                 if(!mail){
                     throw new ParamException("审核操作成功，但用户邮箱格式错误，不能发送邮件");
-                }
-                for(int i = 0; i< size; i++){
-                    toStr[i] = researcherMap.get(researcherIds.get(i)).getEmail();
                 }
                 MailParam mailParam = createMailParam("3084921312@qq.com", toStr, "项目审核通知","你参与的项目:"+project.getName()+"审核通过了");
                 mailService.sendMail(mailParam);

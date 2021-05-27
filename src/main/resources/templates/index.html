@@ -158,7 +158,7 @@
 
         $('.login-out').on("click", function () {
             $.ajax({
-                url: 'http://localhost:8080/userLogin/logout',
+                url: '/userLogin/logout',
                 dataType: "json", //后端返回数据格式为json
                 async: true,
                 contentType: "application/json",

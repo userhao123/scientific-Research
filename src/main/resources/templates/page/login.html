@@ -137,7 +137,7 @@
                 $('#loginBtn').val("正在登录...");
                 $.ajax({
                     type:'post',
-                    url:'http://localhost:8080/userLogin/login',
+                    url:'/userLogin/login',
                     dataType:'json',
                     data:JSON.stringify(params),
                     contentType:'application/json',

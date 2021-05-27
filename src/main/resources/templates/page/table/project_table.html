@@ -137,7 +137,7 @@
             table.render({
                 elem: tableIndex,
                 id: 'reloadTable',
-                url: 'http://localhost:8080/project/page',
+                url: '/project/page',
                 where: {
                     state : tableStatus
                 },
@@ -236,7 +236,7 @@
                 return false;
             } else if (obj.event === 'delete') {
 				layer.confirm('真的删除行么', function(index) {
-					$.get('http://localhost:8080/project/delete?id=' + jsondata.id,
+					$.get('/project/delete?id=' + jsondata.id,
 						function(req) {
 							if (req.code === 1) {
 								obj.del();
@@ -271,7 +271,7 @@
                     layer.msg("已支付过经费，无需再支付了",{icon: 6});
                 }else{
                     $.ajax({
-                        url: 'http://localhost:8080/Alipay/pay',
+                        url: '/Alipay/pay',
                         dataType: "html", //后端返回数据格式为html
                         async: true,
                         // contentType: "application/json",

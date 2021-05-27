@@ -151,7 +151,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-            	url: 'http://localhost:8080/researcher/add',
+            	url: '/researcher/add',
             	dataType: "json", //后端返回数据格式为json
             	async: true,
             	//前端传送json类型请求编码类型，后端controller的参数要用@RequestBody注解接收
@@ -199,7 +199,7 @@
 		//指定允许上传的文件类型
 		upload.render({
 			elem: '#test1'
-			,url: 'http://localhost:8080/project-file/upload' //上传接口
+			,url: '/project-file/upload' //上传接口
 			,accept: 'file' //普通文件
 			,auto: false
 			,data: {

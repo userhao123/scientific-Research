@@ -118,7 +118,7 @@
             table.render({
                 elem: tableIndex,
                 id: 'reloadTable',
-                url: 'http://localhost:8080/project-file/page',
+                url: '/project-file/page',
                 where: {
                     state : tableStatus
                 },
@@ -174,7 +174,7 @@
                 var checkStatus = table.checkStatus(obj.config.id),
                     data = checkStatus.data;
                 $.ajax({
-                    url: 'http://localhost:8080/project-file/batchDelete',
+                    url: '/project-file/batchDelete',
                     dataType: "json", //后端返回数据格式为json
                     async: true,
                     contentType: "application/json",
@@ -213,11 +213,11 @@
         table.on('tool(currentTableFilter)', function (obj) {
             var jsondata = obj.data;
             if (obj.event === 'download') {
-                window.location.href="http://localhost:8080/project-file/download?id="+jsondata.id;
+                window.location.href="/project-file/download?id="+jsondata.id;
                 return false;
             } else if (obj.event === 'delete') {
 				layer.confirm('真的删除行么', function(index) {
-					$.get('http://localhost:8080/project-file/delete?id=' + jsondata.id,
+					$.get('/project-file/delete?id=' + jsondata.id,
 						function(req) {
 							if (req.code === 1) {
 								obj.del();

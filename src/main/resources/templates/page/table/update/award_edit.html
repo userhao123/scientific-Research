@@ -98,7 +98,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-            	url: 'http://localhost:8080/award/update',
+            	url: '/award/update',
             	dataType: "json", //后端返回数据格式为json
             	async: true,
             	contentType: "application/json",   
@@ -109,7 +109,7 @@
             			// 获取窗口索引
             			var index = parent.layer.getFrameIndex(window.name);
             			parent.layer.close(index);
-            			parent.layer.msg(req.msg);
+            			parent.layer.msg(req.msgs);
             			//刷新表格
 						parent.table.reload('reloadTable', {
 						    page: {
@@ -117,12 +117,12 @@
 						    }						   
 						});
             		}else if(req.code === 1000){
-						layer.msg(req.msg,{
+						layer.msg(req.msgs,{
 							icon: 5
 						});
 						top.location.href = '../../login.html';
 					} else {
-            			layer.msg(req.msg, {
+            			layer.msg(req.msgs, {
             				icon: 5
             			});
             		}

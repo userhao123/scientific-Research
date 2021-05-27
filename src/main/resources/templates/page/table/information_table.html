@@ -49,7 +49,7 @@
             table.render({
                 elem: tableIndex,
                 id: 'reloadTable',
-                url: 'http://localhost:8080/collect-information/pageCollectInformation',
+                url: '/collect-information/pageCollectInformation',
                 // where: {
                 //     state: tableStatus
                 // },
@@ -112,7 +112,7 @@
             var jsondata = obj.data;
             if (obj.event === 'delete') {
                 layer.confirm('真的删除行么', function (index) {
-                    $.get('http://localhost:8080/project/delete?id=' + jsondata.id,
+                    $.get('/project/delete?id=' + jsondata.id,
                         function (req) {
                             if (req.code === 1) {
                                 obj.del();

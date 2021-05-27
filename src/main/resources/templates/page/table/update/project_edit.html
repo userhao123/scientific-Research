@@ -128,7 +128,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-            	url: 'http://localhost:8080/project/update',
+            	url: '/project/update',
             	dataType: "json", //后端返回数据格式为json
             	async: true,
             	contentType: "application/json",   
@@ -174,7 +174,7 @@
 		//指定允许上传的文件类型
 		upload.render({
 			elem: '#test1'
-			,url: 'http://localhost:8080/project-file/uploadFile' //上传接口
+			,url: '/project-file/uploadFile' //上传接口
 			,accept: 'file' //普通文件
 			,auto: false
 			,data: {

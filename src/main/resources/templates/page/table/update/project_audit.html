@@ -81,7 +81,7 @@
 				form.on('submit(sub)', function(data) {
 					
 					$.ajax({
-						url: 'http://localhost:8080/project-audit/audit',
+						url: '/project-audit/audit',
 						dataType: "json", //后端返回数据格式为json
 						async: true,
 						contentType: "application/json",   
@@ -97,7 +97,7 @@
 								parent.layer.msg(req.msgs);
 								//刷新表格
 								parent.table.reload('reloadTable', {
-									url: 'http://localhost:8080/project/page'
+									url: '/project/page'
 								});
 							} else {
 								layer.msg(req.msgs, {

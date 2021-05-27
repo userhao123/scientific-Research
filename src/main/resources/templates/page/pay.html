@@ -80,7 +80,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-                url: 'http://localhost:8080/Alipay/pay',
+                url: '/Alipay/pay',
                 dataType: "html", //后端返回数据格式为html
                 async: true,
                 // contentType: "application/json",

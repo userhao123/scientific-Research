@@ -108,7 +108,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-            	url: 'http://localhost:8080/achievement/update',
+            	url: '/achievement/update',
             	dataType: "json", //后端返回数据格式为json
             	async: true,
             	contentType: "application/json",   

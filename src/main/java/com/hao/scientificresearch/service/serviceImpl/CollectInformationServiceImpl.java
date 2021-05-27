@@ -143,7 +143,7 @@ public class CollectInformationServiceImpl extends ServiceImpl<CollectInformatio
             throw new ParamException("参数不能为空");
         }
         CollectInformationResp resp = null;
-        List<CollectInformation> list1 = this.list(Wrappers.lambdaQuery(CollectInformation.class).eq(CollectInformation::getUsername, username));
+        List<CollectInformation> list1 = this.list(Wrappers.lambdaQuery(CollectInformation.class).eq(CollectInformation::getUsername, username).eq(CollectInformation::getIsWrited,false));
         List<CollectInformationResp> respList = new ArrayList<>();
         if (CollectionUtil.isNotEmpty(list1)) {
             for (CollectInformation collectInformation : list1) {
@@ -233,7 +233,13 @@ public class CollectInformationServiceImpl extends ServiceImpl<CollectInformatio
             resp = projectService.updateById(project);
         }
         if(resp){
-           return this.remove(Wrappers.lambdaQuery(CollectInformation.class).eq(CollectInformation::getInformationType,informationType).eq(CollectInformation::getUsername,name));
+            CollectInformation one = this.getOne(Wrappers.lambdaQuery(CollectInformation.class).eq(CollectInformation::getInformationType, informationType).eq(CollectInformation::getUsername, name));
+            if(one!=null){
+                one.setIsWrited(true);
+            }
+            return this.updateById(one);
+//            return this.remove(Wrappers.lambdaQuery(CollectInformation.class).eq(CollectInformation::getInformationType,informationType).eq(CollectInformation::getUsername,name));
+
         }
         return true;
     }

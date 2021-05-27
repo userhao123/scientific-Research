@@ -141,29 +141,8 @@
     $('#downloadBtn').on('click',function () {
         var fileName = $('#fileName').text();
         console.log("文件名:"+fileName);
-        window.location.href="http://localhost:8080/project-file/detailDownload?pathName="+fileName;
+        window.location.href="/project-file/detailDownload?pathName="+fileName;
         return false;
-        // $.ajax({
-        //     url: 'http://localhost:8080/project-file/detailDownload',
-        //     dataType: "json", //后端返回数据格式为html
-        //     async: true,
-        //     // contentType: "application/json",
-        //     data: {
-        //         fileName: fileName
-        //     },
-        //     type: "GET", //请求方式
-        //     success: function(req) { //请求成功时处理，req接收后端返回的json数据
-        //         layer.msg('下载成功',{
-        //             icon: 6
-        //         })
-        //     },
-        //     error: function(req) { //请求出错处理
-        //         layer.msg('请求发送异常', {
-        //             icon: 5
-        //         });
-        //         console.log(req);
-        //     }
-        // });
     })
 
 

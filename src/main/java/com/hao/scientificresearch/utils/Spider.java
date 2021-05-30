@@ -28,9 +28,9 @@ public class Spider {
         }
         //这里根据在网页中分析的类选择器来获取科研动态信息所在的节点
         assert doc != null;
-        Elements tables = doc.getElementsByAttributeValue("cellspacing", "5");
-        Elements aLabel = tables.select("td.STYLE30");
-        for(Element e:aLabel){
+        Elements elements = doc.getElementsByClass("list-main");
+        Elements select = elements.select("li");
+        for(Element e:select){
             try{
                 Thread.sleep(1000);   //让线程操作不要太快,1秒一次,主要是模拟人在点击
             }catch (InterruptedException es){

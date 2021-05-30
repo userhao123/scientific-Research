@@ -119,8 +119,8 @@ public class TextClassifier {
     private static String printClass(double[] classProb) {
 
         ArrayList<String> list = new ArrayList<>(4);
-        list.add("文化、体育和娱乐业");
-        list.add("信息传输，软件和信息技术服务业");
+        list.add("文化体育业");
+        list.add("软件信息技术业");
         list.add("金融业");
         list.add("其他行业");
         System.out.println("sport 概率" + classProb[0]);

@@ -165,6 +165,7 @@ public class NBClassifier {
         for (Map.Entry<String, Integer> stringIntegerEntry : wordFreMap.entrySet()) {
             Map.Entry entry = stringIntegerEntry;
             String key = (String) entry.getKey();
+            Integer value = (Integer)entry.getValue();
             Long tmpCount = 0L;
             Double weight = 1.0;
             if (docMap.containsKey(key)) {
@@ -174,7 +175,7 @@ public class NBClassifier {
                 weight = this.wordWeightMap.get(key);
             }
             //TF-IDF的思想计算权重比率
-            probMatrixPerClass[index++] = 1.0 * (tmpCount + 1) * weight / (classWordCount + this.wordDifCount);
+            probMatrixPerClass[index++] = 1.0 * (tmpCount + 1 + value) * weight / (classWordCount + this.wordDifCount);
         }
         return probMatrixPerClass;
     }
